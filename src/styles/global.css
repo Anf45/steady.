@@ -1,0 +1,456 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #1f2937;
+  background: #f5f7fb;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #111827;
+  color: #ffffff;
+  padding: 0.75rem 1rem;
+  min-height: 44px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input,
+select,
+textarea {
+  min-height: 44px;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-shell {
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 1.5rem 0 3rem;
+}
+
+.app-main {
+  padding-top: 1rem;
+}
+
+.navbar,
+.card,
+.page-heading {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(209, 213, 219, 0.9);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.navbar,
+.card,
+.page-heading,
+.card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.navbar,
+.card,
+.page-heading {
+  padding: 1.25rem;
+}
+
+.nav-links,
+.grid,
+.stack,
+.form-stack,
+.page-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.nav-links {
+  grid-auto-flow: column;
+}
+
+.nav-brand {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.nav-link {
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  color: #475569;
+}
+
+.nav-link.active {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.page-section {
+  margin-top: 1rem;
+}
+
+.page-heading {
+  align-items: flex-end;
+}
+
+.grid.two-column {
+  grid-template-columns: 2fr 1fr;
+}
+
+.field {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+.progress-track {
+  width: 100%;
+  height: 0.75rem;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #2563eb 0%, #14b8a6 100%);
+}
+
+.secondary-button {
+  background: #ffffff;
+  color: #111827;
+}
+
+.danger-button {
+  color: #b91c1c;
+  border-color: #fecaca;
+  background: #fff7f7;
+}
+
+.text-link {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.25rem 0;
+}
+
+.status-card {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.nav-user {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: end;
+  text-align: right;
+}
+
+.xp-chip {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.xp-label {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.dashboard-shell {
+  gap: 1.5rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1rem;
+}
+
+.dashboard-note {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.habit-form-card {
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.habit-card {
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.habit-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.habit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.check-in-block {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: end;
+}
+
+.status-text {
+  font-size: 0.85rem;
+  color: #047857;
+}
+
+.muted-text {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.status-banner {
+  padding: 0.85rem 1rem;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  background: #fff7f7;
+}
+
+.habit-detail-page {
+  gap: 1rem;
+}
+
+.profile-page {
+  gap: 1rem;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.profile-card {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.badge-list {
+  display: grid;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.badge-item {
+  width: 100%;
+  padding: 0.85rem;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.habit-detail-card {
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.habit-detail-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.check-in-history {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.auth-card {
+  width: min(100%, 420px);
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.auth-form {
+  width: 100%;
+}
+
+.auth-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.toggle-button {
+  background: #ffffff;
+  color: #111827;
+}
+
+.active-toggle {
+  background: #111827;
+  color: #ffffff;
+}
+
+.form-error {
+  color: #b91c1c;
+  font-size: 0.95rem;
+}
+
+.centered-card {
+  min-height: 60vh;
+  align-content: center;
+  justify-items: center;
+}
+
+.empty-state {
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+@media (max-width: 768px) {
+  .navbar,
+  .card,
+  .page-heading,
+  .card-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .nav-links {
+    grid-auto-flow: row;
+    width: 100%;
+  }
+
+  .section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .section-header > div,
+  .section-header > div:last-child,
+  .section-header button,
+  .page-heading button,
+  .habit-actions button,
+  .habit-actions a,
+  .auth-form button {
+    width: 100%;
+  }
+
+  .nav-user {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .check-in-block {
+    justify-items: start;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .habit-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .grid.two-column {
+    grid-template-columns: 1fr;
+  }
+
+  .app-shell {
+    width: min(100% - 1rem, 1100px);
+    padding: 0.75rem 0 2rem;
+  }
+
+  .navbar,
+  .card,
+  .page-heading {
+    padding: 1rem;
+  }
+}
