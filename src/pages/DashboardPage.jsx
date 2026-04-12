@@ -6,6 +6,7 @@ import { XPBar } from "../components/dashboard/XPBar";
 import { HabitCard } from "../components/habits/HabitCard";
 import { HabitForm } from "../components/habits/HabitForm";
 import { useAuth } from "../hooks/useAuth";
+import { groupHabitsBySection } from "../utils/habits";
 import {
   archiveHabit,
   completeHabitCheckIn,
@@ -27,6 +28,7 @@ export function DashboardPage() {
   const [checkInFeedbackByHabit, setCheckInFeedbackByHabit] = useState({});
   const displayName = user?.displayName || "friend";
   const totalXp = userProfile?.xpTotal || 0;
+  const groupedHabits = groupHabitsBySection(habits);
 
   useEffect(() => {
     async function loadHabits() {
@@ -233,17 +235,28 @@ export function DashboardPage() {
           />
         ) : (
           <div className="stack">
-            {habits.map((habit) => (
-              <HabitCard
-                key={habit.id}
-                habit={habit}
-                onEdit={openEditForm}
-                onArchive={handleArchiveHabit}
-                onDelete={handleDeleteHabit}
-                onCheckIn={handleCheckIn}
-                isCheckingIn={checkingInHabitId === habit.id}
-                checkInFeedback={checkInFeedbackByHabit[habit.id] || ""}
-              />
+            {groupedHabits.map((habitGroup) => (
+              <section key={habitGroup.sectionName} className="stack grouped-habits-section">
+                <div className="grouped-habits-header">
+                  <p className="eyebrow">Section</p>
+                  <h3>{habitGroup.sectionName}</h3>
+                </div>
+
+                <div className="stack">
+                  {habitGroup.habits.map((habit) => (
+                    <HabitCard
+                      key={habit.id}
+                      habit={habit}
+                      onEdit={openEditForm}
+                      onArchive={handleArchiveHabit}
+                      onDelete={handleDeleteHabit}
+                      onCheckIn={handleCheckIn}
+                      isCheckingIn={checkingInHabitId === habit.id}
+                      checkInFeedback={checkInFeedbackByHabit[habit.id] || ""}
+                    />
+                  ))}
+                </div>
+              </section>
             ))}
           </div>
         )}

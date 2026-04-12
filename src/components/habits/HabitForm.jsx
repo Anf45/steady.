@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 const defaultValues = {
   title: "",
   description: "",
+  section: "",
   frequencyType: "daily",
   frequencyTarget: 1,
 };
@@ -20,6 +21,7 @@ export function HabitForm({
     setFormValues({
       title: initialValues.title ?? "",
       description: initialValues.description ?? "",
+      section: initialValues.section ?? "",
       frequencyType: initialValues.frequencyType ?? "daily",
       frequencyTarget: initialValues.frequencyTarget ?? 1,
     });
@@ -77,6 +79,17 @@ export function HabitForm({
           onChange={handleChange}
           placeholder="Optional note about this habit"
           rows="3"
+        />
+      </label>
+
+      <label className="field">
+        <span>Section</span>
+        <input
+          type="text"
+          name="section"
+          value={formValues.section}
+          onChange={handleChange}
+          placeholder="Morning"
         />
       </label>
 

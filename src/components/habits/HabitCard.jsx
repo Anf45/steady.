@@ -17,6 +17,7 @@ export function HabitCard({
     <article className="card habit-card">
       <div className="card-row">
         <div>
+          <p className="eyebrow">{habit.section || "General"}</p>
           <h3>{habit.title}</h3>
           <p>{formatHabitFrequency(habit)}</p>
         </div>

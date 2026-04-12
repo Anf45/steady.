@@ -243,6 +243,16 @@ p {
   flex-direction: column;
 }
 
+.grouped-habits-section {
+  gap: 0.75rem;
+}
+
+.grouped-habits-header {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0 0.25rem;
+}
+
 .habit-form-card {
   align-items: stretch;
   flex-direction: column;
