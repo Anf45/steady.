@@ -8,10 +8,10 @@
 - User profile creation in Firestore on sign up
 - Protected routes for authenticated pages
 - Dashboard with XP summary and habit overview
-- Habit creation, editing, listing, and archiving
+- Habit creation, editing, listing, archiving, and deletion
 - Habit detail page with recent check-in history
 - Daily check-in flow with:
-  - duplicate check-in prevention
+  - same-day progress tracking for habits with higher repeat targets
   - streak updates
   - XP gain
   - check-in history storage
@@ -109,14 +109,14 @@ Recommended end-to-end check:
 5. Confirm the habit appears on the dashboard
 6. Check in on that habit
 7. Confirm:
-   - the check-in button changes state
+   - the habit progress updates for today
    - XP increases
-   - streak updates
+   - streak updates after the first completion of the day
    - the first check-in badge appears on the profile page
 8. Open the habit detail page
 9. Confirm the recent check-in date appears in the history list
 10. Edit the habit and confirm the updated values save
-11. Archive the habit and confirm it disappears from the active dashboard list
+11. Archive or delete the habit and confirm it disappears from the active dashboard list
 12. Open the profile page and confirm account summary values load correctly
 13. Log out and confirm protected pages redirect back to auth
 
