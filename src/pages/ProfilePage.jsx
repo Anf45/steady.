@@ -138,7 +138,7 @@ export function ProfilePage() {
             <p>Total check-ins completed across all habits.</p>
           </section>
 
-          <section className="card profile-card">
+          <section className="card profile-card profile-badges-card">
             <p className="eyebrow">Badges</p>
             {earnedBadges.length === 0 ? (
               <p>No badges earned yet.</p>
