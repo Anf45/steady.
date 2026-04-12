@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import { EmptyState } from "../components/common/EmptyState";
 import { StatusCard } from "../components/common/StatusCard";
 import { getEarnedBadgeDetails } from "../services";
-import { getHabitsForUser, getUserProfile } from "../services";
+import { getHabitsForUser, getUserProfile, resetUserProgress } from "../services";
 import { useAuth } from "../hooks/useAuth";
 
 export function ProfilePage() {
-  const { user, logOut } = useAuth();
+  const { user, logOut, refreshUserProfile } = useAuth();
   const [profile, setProfile] = useState(null);
   const [activeHabits, setActiveHabits] = useState([]);
   const [loadingPage, setLoadingPage] = useState(true);
   const [pageError, setPageError] = useState("");
+  const [pageMessage, setPageMessage] = useState("");
+  const [isResetting, setIsResetting] = useState(false);
   const earnedBadges = getEarnedBadgeDetails(profile?.earnedBadges);
 
   useEffect(() => {
@@ -22,6 +24,7 @@ export function ProfilePage() {
 
       try {
         setPageError("");
+        setPageMessage("");
         setLoadingPage(true);
 
         const [savedProfile, savedHabits] = await Promise.all([
@@ -41,6 +44,41 @@ export function ProfilePage() {
     loadProfilePage();
   }, [user?.uid]);
 
+  async function handleResetProgress() {
+    if (!user?.uid) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Reset your account progress? This will clear XP, badges, habits, and saved check-ins, but it will keep your login account."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setPageError("");
+      setPageMessage("");
+      setIsResetting(true);
+
+      await resetUserProgress(user.uid);
+      const [savedProfile, savedHabits] = await Promise.all([
+        getUserProfile(user.uid),
+        getHabitsForUser(user.uid),
+      ]);
+
+      setProfile(savedProfile);
+      setActiveHabits(savedHabits);
+      await refreshUserProfile();
+      setPageMessage("Your account progress has been reset.");
+    } catch (error) {
+      setPageError(error.message || "Could not reset your account progress.");
+    } finally {
+      setIsResetting(false);
+    }
+  }
+
   return (
     <section className="page-section profile-page">
       <div className="page-heading">
@@ -48,9 +86,19 @@ export function ProfilePage() {
           <p className="eyebrow">Profile</p>
           <h2>Your account</h2>
         </div>
-        <button type="button" className="secondary-button" onClick={logOut}>
-          Log out
-        </button>
+        <div className="profile-actions">
+          <button
+            type="button"
+            className="secondary-button danger-button"
+            onClick={handleResetProgress}
+            disabled={isResetting}
+          >
+            {isResetting ? "Resetting..." : "Reset progress"}
+          </button>
+          <button type="button" className="secondary-button" onClick={logOut}>
+            Log out
+          </button>
+        </div>
       </div>
 
       {loadingPage ? (
@@ -101,6 +149,12 @@ export function ProfilePage() {
           description="We could not find your account summary right now."
         />
       )}
+
+      {pageMessage ? (
+        <section className="card">
+          <p className="status-text">{pageMessage}</p>
+        </section>
+      ) : null}
     </section>
   );
 }

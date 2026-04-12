@@ -303,6 +303,12 @@ p {
   gap: 1rem;
 }
 
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
 .profile-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -412,6 +418,7 @@ p {
   .section-header > div:last-child,
   .section-header button,
   .page-heading button,
+  .profile-actions button,
   .habit-actions button,
   .habit-actions a,
   .auth-form button {
