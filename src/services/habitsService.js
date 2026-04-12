@@ -84,6 +84,7 @@ export async function createHabit(userId, habitData) {
   requireFirebaseSetup();
 
   const habitsCollection = getHabitsCollection(userId);
+  const existingHabitsSnapshot = await getDocs(habitsCollection);
   const newHabit = {
     ...buildHabitFields(habitData),
     createdAt: serverTimestamp(),
@@ -93,6 +94,10 @@ export async function createHabit(userId, habitData) {
   const documentReference = await addDoc(habitsCollection, newHabit);
   const createdHabit = await getHabitById(userId, documentReference.id);
   await awardBadge(userId, BADGES.firstHabit.id);
+
+  if (existingHabitsSnapshot.size + 1 >= 3) {
+    await awardBadge(userId, BADGES.threeHabits.id);
+  }
 
   return createdHabit;
 }

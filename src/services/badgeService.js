@@ -7,15 +7,30 @@ export const BADGES = {
     title: "First Habit",
     description: "Created the first habit.",
   },
+  threeHabits: {
+    id: "three-habits",
+    title: "3 Habits",
+    description: "Created 3 habits.",
+  },
   firstCheckIn: {
     id: "first-check-in",
     title: "First Check-In",
     description: "Completed the first daily check-in.",
   },
+  fiveCheckIns: {
+    id: "five-check-ins",
+    title: "5 Check-Ins",
+    description: "Completed 5 total check-ins.",
+  },
   threeDayStreak: {
     id: "three-day-streak",
     title: "3-Day Streak",
     description: "Reached a streak of 3 days.",
+  },
+  oneHundredXp: {
+    id: "one-hundred-xp",
+    title: "100 XP",
+    description: "Reached 100 total XP.",
   },
 };
 

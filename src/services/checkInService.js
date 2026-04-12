@@ -156,6 +156,16 @@ export async function completeHabitCheckIn(userId, habitId, dateString = getToda
   if (result.status === "success") {
     await awardBadge(userId, BADGES.firstCheckIn.id);
 
+    if (result.userXpTotal >= 100) {
+      await awardBadge(userId, BADGES.oneHundredXp.id);
+    }
+
+    const totalCheckInCount = await getTotalCheckInCountForUser(userId);
+
+    if (totalCheckInCount >= 5) {
+      await awardBadge(userId, BADGES.fiveCheckIns.id);
+    }
+
     if (result.updatedHabit.streakCurrent >= 3) {
       await awardBadge(userId, BADGES.threeDayStreak.id);
     }
