@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { EmptyState } from "../components/common/EmptyState";
 import { StatusCard } from "../components/common/StatusCard";
-import { getEarnedBadgeDetails } from "../services";
+import { getEarnedBadgeDetails, getTotalCheckInCountForUser } from "../services";
 import { getHabitsForUser, getUserProfile, resetUserProgress } from "../services";
 import { useAuth } from "../hooks/useAuth";
 
@@ -13,6 +13,7 @@ export function ProfilePage() {
   const [pageError, setPageError] = useState("");
   const [pageMessage, setPageMessage] = useState("");
   const [isResetting, setIsResetting] = useState(false);
+  const [totalCheckIns, setTotalCheckIns] = useState(0);
   const earnedBadges = getEarnedBadgeDetails(profile?.earnedBadges);
 
   useEffect(() => {
@@ -27,13 +28,15 @@ export function ProfilePage() {
         setPageMessage("");
         setLoadingPage(true);
 
-        const [savedProfile, savedHabits] = await Promise.all([
+        const [savedProfile, savedHabits, savedCheckInCount] = await Promise.all([
           getUserProfile(user.uid),
           getHabitsForUser(user.uid),
+          getTotalCheckInCountForUser(user.uid),
         ]);
 
         setProfile(savedProfile);
         setActiveHabits(savedHabits);
+        setTotalCheckIns(savedCheckInCount);
       } catch (error) {
         setPageError(error.message || "Could not load your profile.");
       } finally {
@@ -63,13 +66,15 @@ export function ProfilePage() {
       setIsResetting(true);
 
       await resetUserProgress(user.uid);
-      const [savedProfile, savedHabits] = await Promise.all([
+      const [savedProfile, savedHabits, savedCheckInCount] = await Promise.all([
         getUserProfile(user.uid),
         getHabitsForUser(user.uid),
+        getTotalCheckInCountForUser(user.uid),
       ]);
 
       setProfile(savedProfile);
       setActiveHabits(savedHabits);
+      setTotalCheckIns(savedCheckInCount);
       await refreshUserProfile();
       setPageMessage("Your account progress has been reset.");
     } catch (error) {
@@ -125,6 +130,12 @@ export function ProfilePage() {
             <p className="eyebrow">Habits</p>
             <h3>{activeHabits.length}</h3>
             <p>Active habits currently in your account.</p>
+          </section>
+
+          <section className="card profile-card">
+            <p className="eyebrow">Check-ins</p>
+            <h3>{totalCheckIns}</h3>
+            <p>Total check-ins completed across all habits.</p>
           </section>
 
           <section className="card profile-card">

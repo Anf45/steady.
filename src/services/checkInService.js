@@ -183,3 +183,20 @@ export async function getRecentCheckInsForHabit(userId, habitId, maxItems = 7) {
     completionCount: Number(documentSnapshot.data().completionCount || 1),
   }));
 }
+
+export async function getTotalCheckInCountForUser(userId) {
+  requireFirebaseSetup();
+
+  const habitsSnapshot = await getDocs(collection(firestore, "users", userId, "habits"));
+  const checkInCounts = await Promise.all(
+    habitsSnapshot.docs.map(async (habitSnapshot) => {
+      const checkInsSnapshot = await getDocs(collection(habitSnapshot.ref, "checkIns"));
+
+      return checkInsSnapshot.docs.reduce((totalCount, checkInSnapshot) => {
+        return totalCount + Number(checkInSnapshot.data().completionCount || 1);
+      }, 0);
+    })
+  );
+
+  return checkInCounts.reduce((totalCount, habitCount) => totalCount + habitCount, 0);
+}
