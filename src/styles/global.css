@@ -349,6 +349,80 @@ p {
   border: 1px solid #d1d5db;
   border-radius: 12px;
   background: #ffffff;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.badge-item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.badge-shape {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+}
+
+.badge-shape-circle {
+  border-radius: 999px;
+}
+
+.badge-shape-square {
+  border-radius: 0.2rem;
+}
+
+.badge-shape-diamond {
+  transform: rotate(45deg);
+  border-radius: 0.15rem;
+}
+
+.badge-shape-triangle {
+  width: 0;
+  height: 0;
+  border-left: 0.55rem solid transparent;
+  border-right: 0.55rem solid transparent;
+  border-bottom: 1rem solid #f59e0b;
+}
+
+.badge-shape-hex {
+  clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0 50%);
+}
+
+.badge-shape-pill {
+  width: 1.4rem;
+  border-radius: 999px;
+}
+
+.badge-color-gold {
+  background: #f4b740;
+}
+
+.badge-color-blue {
+  background: #3b82f6;
+}
+
+.badge-color-green {
+  background: #22c55e;
+}
+
+.badge-color-orange {
+  background: #f59e0b;
+}
+
+.badge-color-red {
+  background: #ef4444;
+}
+
+.badge-color-purple {
+  background: #8b5cf6;
+}
+
+.badge-color-orange.badge-shape-triangle {
+  background: transparent;
+  border-bottom-color: #f59e0b;
 }
 
 .habit-detail-card {

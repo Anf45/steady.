@@ -6,31 +6,43 @@ export const BADGES = {
     id: "first-habit",
     title: "First Habit",
     description: "Created the first habit.",
+    shape: "circle",
+    color: "gold",
   },
   threeHabits: {
     id: "three-habits",
     title: "3 Habits",
     description: "Created 3 habits.",
+    shape: "square",
+    color: "blue",
   },
   firstCheckIn: {
     id: "first-check-in",
     title: "First Check-In",
     description: "Completed the first daily check-in.",
+    shape: "diamond",
+    color: "green",
   },
   fiveCheckIns: {
     id: "five-check-ins",
     title: "5 Check-Ins",
     description: "Completed 5 total check-ins.",
+    shape: "triangle",
+    color: "orange",
   },
   threeDayStreak: {
     id: "three-day-streak",
     title: "3-Day Streak",
     description: "Reached a streak of 3 days.",
+    shape: "hex",
+    color: "red",
   },
   oneHundredXp: {
     id: "one-hundred-xp",
     title: "100 XP",
     description: "Reached 100 total XP.",
+    shape: "pill",
+    color: "purple",
   },
 };
 

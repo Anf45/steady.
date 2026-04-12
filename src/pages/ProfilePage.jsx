@@ -146,7 +146,13 @@ export function ProfilePage() {
               <div className="badge-list">
                 {earnedBadges.map((badge) => (
                   <div key={badge.id} className="badge-item">
-                    <strong>{badge.title}</strong>
+                    <div className="badge-item-header">
+                      <span
+                        className={`badge-shape badge-shape-${badge.shape} badge-color-${badge.color}`}
+                        aria-hidden="true"
+                      />
+                      <strong>{badge.title}</strong>
+                    </div>
                     <p>{badge.description}</p>
                   </div>
                 ))}
