@@ -13,6 +13,7 @@ import {
   createHabit,
   deleteHabit,
   getHabitsForUser,
+  getRecentCheckInsForUser,
   getTotalCheckInCountForUser,
   updateHabit,
 } from "../services";
@@ -28,6 +29,7 @@ export function DashboardPage() {
   const [checkingInHabitId, setCheckingInHabitId] = useState("");
   const [checkInFeedbackByHabit, setCheckInFeedbackByHabit] = useState({});
   const [totalCheckIns, setTotalCheckIns] = useState(0);
+  const [recentCheckIns, setRecentCheckIns] = useState([]);
   const displayName = user?.displayName || "friend";
   const totalXp = userProfile?.xpTotal || 0;
   const groupedHabits = groupHabitsBySection(habits);
@@ -47,12 +49,14 @@ export function DashboardPage() {
       try {
         setPageError("");
         setLoadingHabits(true);
-        const [savedHabits, savedCheckInCount] = await Promise.all([
+        const [savedHabits, savedCheckInCount, savedRecentCheckIns] = await Promise.all([
           getHabitsForUser(user.uid),
           getTotalCheckInCountForUser(user.uid),
+          getRecentCheckInsForUser(user.uid),
         ]);
         setHabits(savedHabits);
         setTotalCheckIns(savedCheckInCount);
+        setRecentCheckIns(savedRecentCheckIns);
       } catch (error) {
         setPageError(error.message || "Could not load habits.");
       } finally {
@@ -165,7 +169,10 @@ export function DashboardPage() {
       setCheckingInHabitId(habit.id);
 
       const result = await completeHabitCheckIn(user.uid, habit.id);
-      const savedCheckInCount = await getTotalCheckInCountForUser(user.uid);
+      const [savedCheckInCount, savedRecentCheckIns] = await Promise.all([
+        getTotalCheckInCountForUser(user.uid),
+        getRecentCheckInsForUser(user.uid),
+      ]);
 
       setHabits((currentHabits) =>
         currentHabits.map((currentHabit) =>
@@ -173,6 +180,7 @@ export function DashboardPage() {
         )
       );
       setTotalCheckIns(savedCheckInCount);
+      setRecentCheckIns(savedRecentCheckIns);
 
       setCheckInFeedbackByHabit((currentValues) => ({
         ...currentValues,
@@ -236,6 +244,32 @@ export function DashboardPage() {
             <h3>{totalCheckIns}</h3>
           </div>
         </div>
+      </section>
+
+      <section className="card dashboard-history-card">
+        <SectionHeader
+          eyebrow="Recent activity"
+          title="Last 5 check-ins"
+          description="A simple history of your most recent check-ins."
+        />
+
+        {loadingHabits ? (
+          <p>Loading recent check-ins...</p>
+        ) : recentCheckIns.length === 0 ? (
+          <p className="muted-text">No check-ins yet.</p>
+        ) : (
+          <ul className="dashboard-history-list">
+            {recentCheckIns.map((checkIn) => (
+              <li key={`${checkIn.habitId}-${checkIn.id}`} className="dashboard-history-item">
+                <strong>{checkIn.id}</strong>
+                <span>{checkIn.habitTitle}</span>
+                <span className="muted-text">
+                  {checkIn.completionCount} completion{checkIn.completionCount === 1 ? "" : "s"}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       {isFormOpen ? (

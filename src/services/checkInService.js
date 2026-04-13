@@ -210,3 +210,28 @@ export async function getTotalCheckInCountForUser(userId) {
 
   return checkInCounts.reduce((totalCount, habitCount) => totalCount + habitCount, 0);
 }
+
+export async function getRecentCheckInsForUser(userId, maxItems = 5) {
+  requireFirebaseSetup();
+
+  const habitsSnapshot = await getDocs(collection(firestore, "users", userId, "habits"));
+  const recentCheckInsByHabit = await Promise.all(
+    habitsSnapshot.docs.map(async (habitSnapshot) => {
+      const checkInsSnapshot = await getDocs(
+        query(collection(habitSnapshot.ref, "checkIns"), orderBy("__name__", "desc"), limit(maxItems))
+      );
+
+      return checkInsSnapshot.docs.map((checkInSnapshot) => ({
+        id: checkInSnapshot.id,
+        habitId: habitSnapshot.id,
+        habitTitle: habitSnapshot.data().title || "Habit",
+        completionCount: Number(checkInSnapshot.data().completionCount || 1),
+      }));
+    })
+  );
+
+  return recentCheckInsByHabit
+    .flat()
+    .sort((firstCheckIn, secondCheckIn) => secondCheckIn.id.localeCompare(firstCheckIn.id))
+    .slice(0, maxItems);
+}

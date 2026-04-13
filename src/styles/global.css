@@ -263,6 +263,28 @@ p {
   background: #f8fafc;
 }
 
+.dashboard-history-card {
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.dashboard-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.dashboard-history-item {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #dbe3f0;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
 .grouped-habits-section {
   gap: 0.75rem;
 }
