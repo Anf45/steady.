@@ -13,6 +13,7 @@ import {
   createHabit,
   deleteHabit,
   getHabitsForUser,
+  getTotalCheckInCountForUser,
   updateHabit,
 } from "../services";
 
@@ -26,9 +27,14 @@ export function DashboardPage() {
   const [isSavingHabit, setIsSavingHabit] = useState(false);
   const [checkingInHabitId, setCheckingInHabitId] = useState("");
   const [checkInFeedbackByHabit, setCheckInFeedbackByHabit] = useState({});
+  const [totalCheckIns, setTotalCheckIns] = useState(0);
   const displayName = user?.displayName || "friend";
   const totalXp = userProfile?.xpTotal || 0;
   const groupedHabits = groupHabitsBySection(habits);
+  const bestStreak = habits.reduce(
+    (highestStreak, habit) => Math.max(highestStreak, Number(habit.streakBest || 0)),
+    0
+  );
 
   useEffect(() => {
     async function loadHabits() {
@@ -41,8 +47,12 @@ export function DashboardPage() {
       try {
         setPageError("");
         setLoadingHabits(true);
-        const savedHabits = await getHabitsForUser(user.uid);
+        const [savedHabits, savedCheckInCount] = await Promise.all([
+          getHabitsForUser(user.uid),
+          getTotalCheckInCountForUser(user.uid),
+        ]);
         setHabits(savedHabits);
+        setTotalCheckIns(savedCheckInCount);
       } catch (error) {
         setPageError(error.message || "Could not load habits.");
       } finally {
@@ -155,12 +165,14 @@ export function DashboardPage() {
       setCheckingInHabitId(habit.id);
 
       const result = await completeHabitCheckIn(user.uid, habit.id);
+      const savedCheckInCount = await getTotalCheckInCountForUser(user.uid);
 
       setHabits((currentHabits) =>
         currentHabits.map((currentHabit) =>
           currentHabit.id === habit.id ? result.updatedHabit : currentHabit
         )
       );
+      setTotalCheckIns(savedCheckInCount);
 
       setCheckInFeedbackByHabit((currentValues) => ({
         ...currentValues,
@@ -202,6 +214,29 @@ export function DashboardPage() {
           <p>Create your first habit when you are ready. New habits will appear in the list below.</p>
         </section>
       </div>
+
+      <section className="card dashboard-stats-card">
+        <SectionHeader
+          eyebrow="Stats"
+          title="Summary"
+          description="A quick look at your current progress."
+        />
+
+        <div className="dashboard-stats-grid">
+          <div className="dashboard-stat-item">
+            <p className="eyebrow">Total habits</p>
+            <h3>{habits.length}</h3>
+          </div>
+          <div className="dashboard-stat-item">
+            <p className="eyebrow">Best streak</p>
+            <h3>{bestStreak}</h3>
+          </div>
+          <div className="dashboard-stat-item">
+            <p className="eyebrow">Total check-ins</p>
+            <h3>{totalCheckIns}</h3>
+          </div>
+        </div>
+      </section>
 
       {isFormOpen ? (
         <HabitForm

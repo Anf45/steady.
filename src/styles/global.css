@@ -243,6 +243,26 @@ p {
   flex-direction: column;
 }
 
+.dashboard-stats-card {
+  align-items: stretch;
+  flex-direction: column;
+}
+
+.dashboard-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.dashboard-stat-item {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem;
+  border: 1px solid #dbe3f0;
+  border-radius: 14px;
+  background: #f8fafc;
+}
+
 .grouped-habits-section {
   gap: 0.75rem;
 }
@@ -526,6 +546,10 @@ p {
   }
 
   .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-stats-grid {
     grid-template-columns: 1fr;
   }
 
