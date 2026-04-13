@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { BrandMark } from "../components/common/BrandMark";
 import { StatusCard } from "../components/common/StatusCard";
 import { useAuth } from "../hooks/useAuth";
 import { getFirebaseConfigError, isFirebaseConfigured } from "../services/firebase/config";
@@ -126,6 +127,7 @@ export function AuthPage() {
   return (
     <section className="page-section centered-card">
       <div className="card auth-card">
+        <BrandMark />
         <p className="eyebrow">Account</p>
         <h2>{mode === "login" ? "Log in" : "Create account"}</h2>
         <p>

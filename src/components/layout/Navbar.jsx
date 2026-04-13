@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { BrandMark } from "../common/BrandMark";
 import { useAuth } from "../../hooks/useAuth";
 
 const navItems = [
@@ -14,8 +15,13 @@ export function Navbar({ theme = "light", onToggleTheme }) {
   return (
     <header className="navbar">
       <div className="nav-brand">
-        <p className="eyebrow">steady.</p>
-        <h1>steady.</h1>
+        <div className="nav-brand-row">
+          <BrandMark compact />
+          <div>
+            <p className="eyebrow">Habit tracker</p>
+            <h1>Welcome back</h1>
+          </div>
+        </div>
         <p>Welcome back, {displayName}.</p>
       </div>
       <nav className="nav-links" aria-label="Main navigation">
