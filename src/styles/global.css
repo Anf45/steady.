@@ -485,7 +485,6 @@ p {
 :root[data-theme="dark"] textarea,
 :root[data-theme="dark"] .xp-chip,
 :root[data-theme="dark"] .dashboard-stat-item,
-:root[data-theme="dark"] .dashboard-history-item,
 :root[data-theme="dark"] .badge-item {
   background: #111827;
   color: #e5eefc;
