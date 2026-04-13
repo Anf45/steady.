@@ -4,6 +4,7 @@
   background: #f5f7fb;
   line-height: 1.5;
   font-weight: 400;
+  color-scheme: light;
 }
 
 * {
@@ -15,6 +16,16 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+:root[data-theme="dark"] {
+  color: #e5eefc;
+  background: #0f172a;
+  color-scheme: dark;
+}
+
+:root[data-theme="dark"] body {
+  background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
 }
 
 a {
@@ -263,28 +274,6 @@ p {
   background: #f8fafc;
 }
 
-.dashboard-history-card {
-  align-items: stretch;
-  flex-direction: column;
-}
-
-.dashboard-history-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 0.75rem;
-}
-
-.dashboard-history-item {
-  display: grid;
-  gap: 0.2rem;
-  padding: 0.85rem 1rem;
-  border: 1px solid #dbe3f0;
-  border-radius: 14px;
-  background: #f8fafc;
-}
-
 .grouped-habits-section {
   gap: 0.75rem;
 }
@@ -465,6 +454,61 @@ p {
 .badge-color-orange.badge-shape-triangle {
   background: transparent;
   border-bottom-color: #f59e0b;
+}
+
+:root[data-theme="dark"] .navbar,
+:root[data-theme="dark"] .card,
+:root[data-theme="dark"] .page-heading {
+  background: rgba(15, 23, 42, 0.88);
+  border-color: rgba(71, 85, 105, 0.9);
+  box-shadow: 0 10px 30px rgba(2, 6, 23, 0.35);
+}
+
+:root[data-theme="dark"] .nav-link {
+  color: #cbd5e1;
+}
+
+:root[data-theme="dark"] .nav-link.active {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+:root[data-theme="dark"] .eyebrow,
+:root[data-theme="dark"] .xp-label,
+:root[data-theme="dark"] .muted-text {
+  color: #94a3b8;
+}
+
+:root[data-theme="dark"] .secondary-button,
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] .xp-chip,
+:root[data-theme="dark"] .dashboard-stat-item,
+:root[data-theme="dark"] .dashboard-history-item,
+:root[data-theme="dark"] .badge-item {
+  background: #111827;
+  color: #e5eefc;
+  border-color: #334155;
+}
+
+:root[data-theme="dark"] .progress-track {
+  background: #1e293b;
+}
+
+:root[data-theme="dark"] .text-link {
+  color: #60a5fa;
+}
+
+:root[data-theme="dark"] .status-banner {
+  background: rgba(127, 29, 29, 0.2);
+  border-color: rgba(248, 113, 113, 0.45);
+}
+
+:root[data-theme="dark"] .danger-button {
+  color: #fecaca;
+  background: rgba(127, 29, 29, 0.18);
+  border-color: rgba(248, 113, 113, 0.35);
 }
 
 .habit-detail-card {

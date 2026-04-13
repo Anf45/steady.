@@ -6,7 +6,7 @@ const navItems = [
   { to: "/profile", label: "Profile" },
 ];
 
-export function Navbar() {
+export function Navbar({ theme = "light", onToggleTheme }) {
   const { user, userProfile, logOut } = useAuth();
   const displayName = user?.displayName || "there";
   const totalXp = userProfile?.xpTotal || 0;
@@ -34,6 +34,9 @@ export function Navbar() {
           <span className="xp-label">Total XP</span>
           <strong>{totalXp}</strong>
         </div>
+        <button type="button" className="secondary-button" onClick={onToggleTheme}>
+          {theme === "dark" ? "Light mode" : "Dark mode"}
+        </button>
         <button type="button" className="secondary-button" onClick={logOut}>
           Log out
         </button>
