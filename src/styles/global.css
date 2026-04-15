@@ -5,6 +5,10 @@
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light;
+  --team-accent: #64748b;
+  --team-accent-soft: rgba(100, 116, 139, 0.14);
+  --team-accent-strong: rgba(100, 116, 139, 0.26);
+  --team-glow: rgba(100, 116, 139, 0.18);
 }
 
 * {
@@ -196,12 +200,16 @@ textarea {
 .nav-link {
   padding: 0.55rem 0.85rem;
   border-radius: 999px;
-  color: #475569;
+  color: var(--team-accent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 55%, #ffffff) 0%, #ffffff 100%);
+  border: 1px solid var(--team-accent-soft);
 }
 
 .nav-link.active {
-  background: #e2e8f0;
-  color: #0f172a;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 90%, #ffffff) 0%, color-mix(in srgb, var(--team-accent-soft) 75%, #ffffff) 100%);
+  color: var(--team-accent);
+  border-color: var(--team-accent-strong);
+  box-shadow: 0 8px 20px var(--team-glow);
 }
 
 .page-section {
@@ -247,7 +255,7 @@ p {
 .progress-fill {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #2563eb 0%, #14b8a6 100%);
+  background: linear-gradient(90deg, var(--team-accent) 0%, color-mix(in srgb, var(--team-accent) 55%, #14b8a6) 100%);
 }
 
 .secondary-button {
@@ -262,7 +270,7 @@ p {
 }
 
 .text-link {
-  color: #2563eb;
+  color: var(--team-accent);
   font-weight: 600;
 }
 
@@ -290,9 +298,9 @@ p {
   display: grid;
   gap: 0.1rem;
   padding: 0.65rem 0.85rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--team-accent-soft);
   border-radius: 12px;
-  background: #ffffff;
+  background: linear-gradient(180deg, #ffffff 0%, color-mix(in srgb, var(--team-accent-soft) 60%, #ffffff) 100%);
 }
 
 .xp-label {
@@ -313,11 +321,16 @@ p {
 .dashboard-note {
   align-items: flex-start;
   flex-direction: column;
+  border-color: var(--team-accent-soft);
+  background: linear-gradient(180deg, #ffffff 0%, color-mix(in srgb, var(--team-accent-soft) 70%, #ffffff) 100%);
 }
 
 .dashboard-stats-card {
   align-items: stretch;
   flex-direction: column;
+  border-color: var(--team-accent-soft);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 30%, #ffffff) 0%, #ffffff 100%);
+  box-shadow: 0 10px 24px var(--team-glow);
 }
 
 .dashboard-stats-grid {
@@ -334,9 +347,10 @@ p {
   display: grid;
   gap: 0.25rem;
   padding: 1rem;
-  border: 1px solid #dbe3f0;
+  border: 1px solid var(--team-accent-soft);
   border-radius: 14px;
-  background: #f8fafc;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 38%, #ffffff) 0%, #f8fafc 100%);
+  box-shadow: 0 8px 20px var(--team-glow);
 }
 
 .grouped-habits-section {
@@ -346,13 +360,70 @@ p {
 .grouped-habits-header {
   display: grid;
   gap: 0.2rem;
-  padding: 0 0.25rem;
+  padding: 0 0.25rem 0 0.85rem;
+  border-left: 4px solid var(--team-accent);
 }
 
 .archived-habit-card {
   align-items: stretch;
   flex-direction: column;
   opacity: 0.92;
+  border-color: var(--team-accent-soft);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 30%, #ffffff) 0%, #ffffff 100%);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.team-option-card {
+  display: grid;
+  gap: 0.35rem;
+  text-align: left;
+  min-height: 88px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 55%, #ffffff) 0%, #ffffff 100%);
+  color: #1f2937;
+  border-color: var(--team-accent-strong);
+}
+
+.team-option-card span {
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.active-team-option {
+  border-width: 2px;
+  box-shadow: 0 0 0 2px var(--team-accent-soft), 0 10px 24px var(--team-glow);
+}
+
+.team-earth {
+  --team-accent: #3d7f43;
+  --team-accent-soft: rgba(61, 127, 67, 0.22);
+  --team-accent-strong: rgba(61, 127, 67, 0.34);
+  --team-glow: rgba(61, 127, 67, 0.2);
+}
+
+.team-fire {
+  --team-accent: #de4b2b;
+  --team-accent-soft: rgba(222, 75, 43, 0.24);
+  --team-accent-strong: rgba(222, 75, 43, 0.34);
+  --team-glow: rgba(222, 75, 43, 0.22);
+}
+
+.team-ice {
+  --team-accent: #2b88c9;
+  --team-accent-soft: rgba(43, 136, 201, 0.24);
+  --team-accent-strong: rgba(43, 136, 201, 0.34);
+  --team-glow: rgba(43, 136, 201, 0.22);
+}
+
+.team-air {
+  --team-accent: #8a63f2;
+  --team-accent-soft: rgba(138, 99, 242, 0.24);
+  --team-accent-strong: rgba(138, 99, 242, 0.34);
+  --team-glow: rgba(138, 99, 242, 0.22);
 }
 
 .habit-form-card {
@@ -369,6 +440,9 @@ p {
 .habit-card {
   align-items: stretch;
   flex-direction: column;
+  border-color: var(--team-accent-soft);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 40%, #ffffff) 0%, #ffffff 100%);
+  box-shadow: 0 10px 24px var(--team-glow);
 }
 
 .habit-stats {
@@ -430,6 +504,9 @@ p {
 .profile-card {
   align-items: flex-start;
   flex-direction: column;
+  border-color: var(--team-accent-soft);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 30%, #ffffff) 0%, #ffffff 100%);
+  box-shadow: 0 10px 24px var(--team-glow);
 }
 
 .profile-badges-card {
@@ -448,9 +525,9 @@ p {
 .badge-item {
   width: 100%;
   padding: 0.85rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--team-accent-soft);
   border-radius: 12px;
-  background: #ffffff;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 30%, #ffffff) 0%, #ffffff 100%);
   display: grid;
   gap: 0.45rem;
 }
@@ -534,7 +611,7 @@ p {
 
 .badge-item-locked {
   opacity: 0.68;
-  background: #f8fafc;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 18%, #ffffff) 0%, #f8fafc 100%);
 }
 
 .badge-item-locked .badge-shape {
@@ -558,12 +635,15 @@ p {
 }
 
 :root[data-theme="dark"] .nav-link {
-  color: #cbd5e1;
+  color: #e5eefc;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 28%, #111827) 0%, #111827 100%);
+  border-color: var(--team-accent-strong);
 }
 
 :root[data-theme="dark"] .nav-link.active {
-  background: #1e293b;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 52%, #111827) 0%, color-mix(in srgb, var(--team-accent-soft) 38%, #111827) 100%);
   color: #f8fafc;
+  box-shadow: 0 10px 24px var(--team-glow);
 }
 
 :root[data-theme="dark"] .eyebrow,
@@ -585,12 +665,55 @@ p {
   border-color: #334155;
 }
 
+:root[data-theme="dark"] .dashboard-note,
+:root[data-theme="dark"] .dashboard-stat-item,
+:root[data-theme="dark"] .xp-chip,
+:root[data-theme="dark"] .team-option-card,
+:root[data-theme="dark"] .profile-card,
+:root[data-theme="dark"] .dashboard-stats-card,
+:root[data-theme="dark"] .page-heading,
+:root[data-theme="dark"] .badge-item,
+:root[data-theme="dark"] .badge-item-locked {
+  border-color: var(--team-accent-strong);
+  box-shadow: 0 10px 24px var(--team-glow);
+}
+
+:root[data-theme="dark"] .team-option-card,
+:root[data-theme="dark"] .dashboard-note,
+:root[data-theme="dark"] .dashboard-stat-item,
+:root[data-theme="dark"] .xp-chip,
+:root[data-theme="dark"] .profile-card,
+:root[data-theme="dark"] .dashboard-stats-card,
+:root[data-theme="dark"] .page-heading,
+:root[data-theme="dark"] .badge-item,
+:root[data-theme="dark"] .badge-item-locked {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 35%, #111827) 0%, #111827 100%);
+}
+
 :root[data-theme="dark"] .progress-track {
   background: #1e293b;
 }
 
 :root[data-theme="dark"] .text-link {
   color: #60a5fa;
+}
+
+:root[data-theme="dark"] .team-option-card {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 35%, #111827) 0%, #111827 100%);
+  color: #e5eefc;
+  border-color: var(--team-accent-strong);
+  box-shadow: 0 10px 24px var(--team-glow);
+}
+
+:root[data-theme="dark"] .team-option-card span {
+  color: #cbd5e1;
+}
+
+:root[data-theme="dark"] .habit-card,
+:root[data-theme="dark"] .archived-habit-card {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--team-accent-soft) 35%, #111827) 0%, #111827 100%);
+  border-color: var(--team-accent-strong);
+  box-shadow: 0 10px 24px var(--team-glow);
 }
 
 :root[data-theme="dark"] .status-banner {
@@ -709,6 +832,10 @@ p {
   }
 
   .dashboard-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .team-grid {
     grid-template-columns: 1fr;
   }
 

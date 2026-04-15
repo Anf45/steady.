@@ -8,6 +8,7 @@ import {
 } from "../../services/firebase/auth";
 import { getFirebaseConfigError, isFirebaseConfigured } from "../../services/firebase/config";
 import { ensureUserProfile, getUserProfile } from "../../services/userService";
+import { getDefaultTeam } from "../../services/teamService";
 
 export const AuthContext = createContext(null);
 
@@ -21,6 +22,7 @@ export function AuthProvider({ children }) {
     await ensureUserProfile(nextUser.uid, {
       displayName: nextUser.displayName || "User",
       email: nextUser.email || "",
+      team: getDefaultTeam(),
     });
 
     const profile = await getUserProfile(nextUser.uid);

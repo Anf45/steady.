@@ -4,6 +4,7 @@ import { BrandMark } from "../components/common/BrandMark";
 import { StatusCard } from "../components/common/StatusCard";
 import { useAuth } from "../hooks/useAuth";
 import { getFirebaseConfigError, isFirebaseConfigured } from "../services/firebase/config";
+import { TEAM_OPTIONS, getDefaultTeam } from "../services/teamService";
 
 const loginValues = {
   email: "",
@@ -15,6 +16,7 @@ const signUpValues = {
   email: "",
   password: "",
   confirmPassword: "",
+  team: getDefaultTeam(),
 };
 
 function validateLoginForm(values) {
@@ -44,6 +46,10 @@ function validateSignUpForm(values) {
 
   if (values.password !== values.confirmPassword) {
     return "Passwords do not match.";
+  }
+
+  if (!values.team) {
+    return "Please choose a team.";
   }
 
   return null;
@@ -115,6 +121,7 @@ export function AuthPage() {
           displayName: signUpForm.displayName.trim(),
           email: signUpForm.email.trim(),
           password: signUpForm.password,
+          team: signUpForm.team,
         });
       }
     } catch {
@@ -154,6 +161,34 @@ export function AuthPage() {
         </div>
 
         <form className="form-stack auth-form" onSubmit={handleSubmit}>
+          {mode === "signup" && (
+            <div className="field">
+              <span>Choose your team</span>
+              <div className="team-grid">
+                {TEAM_OPTIONS.map((team) => (
+                  <button
+                    key={team.id}
+                    type="button"
+                    className={
+                      signUpForm.team === team.id
+                        ? `team-option-card ${team.accentClass} active-team-option`
+                        : `team-option-card ${team.accentClass}`
+                    }
+                    onClick={() =>
+                      setSignUpForm((currentValues) => ({ ...currentValues, team: team.id }))
+                    }
+                  >
+                    <strong>
+                      {team.icon} {team.title}
+                    </strong>
+                    <span>{team.description}</span>
+                  </button>
+                ))}
+              </div>
+              <p className="muted-text">You can change this later in your profile.</p>
+            </div>
+          )}
+
           {mode === "signup" && (
             <label className="field">
               <span>Display name</span>

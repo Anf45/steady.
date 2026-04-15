@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
+import { getTeamDetails } from "../../services/teamService";
 import { Navbar } from "./Navbar";
 
 export function AppLayout() {
+  const { userProfile } = useAuth();
   const [theme, setTheme] = useState("light");
+  const currentTeam = getTeamDetails(userProfile?.team);
 
   useEffect(() => {
     const savedTheme = window.localStorage.getItem("steady-theme") || "light";
@@ -19,7 +23,7 @@ export function AppLayout() {
   }
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${currentTeam.accentClass}`}>
       <Navbar theme={theme} onToggleTheme={toggleTheme} />
       <main className="app-main">
         <Outlet />

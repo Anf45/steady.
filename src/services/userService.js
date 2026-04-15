@@ -9,31 +9,40 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { firestore, requireFirebaseSetup } from "./firebase/config";
+import { getDefaultTeam } from "./teamService";
 
-function buildUserProfileFields({ displayName, email }) {
+function buildUserProfileFields({ displayName, email, team }) {
   return {
     displayName,
     email,
+    team: team || getDefaultTeam(),
     xpTotal: 0,
     earnedBadges: [],
     createdAt: serverTimestamp(),
   };
 }
 
-export async function createUserProfile(userId, { displayName, email }) {
+export async function createUserProfile(userId, { displayName, email, team }) {
   requireFirebaseSetup();
 
-  await setDoc(doc(firestore, "users", userId), buildUserProfileFields({ displayName, email }));
+  await setDoc(doc(firestore, "users", userId), buildUserProfileFields({ displayName, email, team }));
 }
 
-export async function ensureUserProfile(userId, { displayName, email }) {
+export async function ensureUserProfile(userId, { displayName, email, team }) {
   requireFirebaseSetup();
 
   const userReference = doc(firestore, "users", userId);
   const documentSnapshot = await getDoc(userReference);
 
   if (!documentSnapshot.exists()) {
-    await setDoc(userReference, buildUserProfileFields({ displayName, email }));
+    await setDoc(userReference, buildUserProfileFields({ displayName, email, team }));
+    return;
+  }
+
+  if (!documentSnapshot.data().team) {
+    await updateDoc(userReference, {
+      team: team || getDefaultTeam(),
+    });
   }
 }
 
@@ -71,5 +80,13 @@ export async function resetUserProgress(userId) {
   await updateDoc(doc(firestore, "users", userId), {
     xpTotal: 0,
     earnedBadges: [],
+  });
+}
+
+export async function updateUserTeam(userId, team) {
+  requireFirebaseSetup();
+
+  await updateDoc(doc(firestore, "users", userId), {
+    team,
   });
 }

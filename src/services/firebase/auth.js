@@ -18,7 +18,7 @@ export function subscribeToAuthChanges(callback) {
   return onAuthStateChanged(authInstance, callback);
 }
 
-export async function registerWithEmail({ displayName, email, password }) {
+export async function registerWithEmail({ displayName, email, password, team }) {
   const authInstance = getAuthInstance();
   const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
 
@@ -26,6 +26,7 @@ export async function registerWithEmail({ displayName, email, password }) {
   await createUserProfile(userCredential.user.uid, {
     displayName,
     email: userCredential.user.email ?? email,
+    team,
   });
 
   return userCredential;

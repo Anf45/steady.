@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { EmptyState } from "../components/common/EmptyState";
 import { StatusCard } from "../components/common/StatusCard";
 import { getBadgeProgressDetails, getTotalCheckInCountForUser } from "../services";
-import { getHabitsForUser, getUserProfile, resetUserProgress } from "../services";
+import { getHabitsForUser, getUserProfile, resetUserProgress, updateUserTeam } from "../services";
 import { useAuth } from "../hooks/useAuth";
+import { TEAM_OPTIONS, getTeamDetails } from "../services/teamService";
 
 export function ProfilePage() {
   const { user, logOut, refreshUserProfile } = useAuth();
@@ -13,8 +14,10 @@ export function ProfilePage() {
   const [pageError, setPageError] = useState("");
   const [pageMessage, setPageMessage] = useState("");
   const [isResetting, setIsResetting] = useState(false);
+  const [isSavingTeam, setIsSavingTeam] = useState(false);
   const [totalCheckIns, setTotalCheckIns] = useState(0);
   const badgeProgress = getBadgeProgressDetails(profile?.earnedBadges);
+  const currentTeam = getTeamDetails(profile?.team);
 
   useEffect(() => {
     async function loadProfilePage() {
@@ -84,6 +87,28 @@ export function ProfilePage() {
     }
   }
 
+  async function handleTeamChange(nextTeam) {
+    if (!user?.uid || !profile || nextTeam === profile.team) {
+      return;
+    }
+
+    try {
+      setPageError("");
+      setPageMessage("");
+      setIsSavingTeam(true);
+
+      await updateUserTeam(user.uid, nextTeam);
+      const savedProfile = await getUserProfile(user.uid);
+      setProfile(savedProfile);
+      await refreshUserProfile();
+      setPageMessage(`Team changed to ${getTeamDetails(nextTeam).title}.`);
+    } catch (error) {
+      setPageError(error.message || "Could not update your team.");
+    } finally {
+      setIsSavingTeam(false);
+    }
+  }
+
   return (
     <section className="page-section profile-page">
       <div className="page-heading">
@@ -118,6 +143,37 @@ export function ProfilePage() {
             <p className="eyebrow">Account info</p>
             <h3>{profile?.displayName || user?.displayName || "No name added"}</h3>
             <p>{profile?.email || user?.email || "No email available"}</p>
+            <p className="muted-text">
+              Team: {currentTeam.icon} {currentTeam.title}
+            </p>
+          </section>
+
+          <section className="card profile-card">
+            <p className="eyebrow">Team</p>
+            <h3>
+              {currentTeam.icon} {currentTeam.title}
+            </h3>
+            <p>{currentTeam.description}</p>
+            <div className="team-grid">
+              {TEAM_OPTIONS.map((team) => (
+                <button
+                  key={team.id}
+                  type="button"
+                  className={
+                    profile?.team === team.id
+                      ? `team-option-card ${team.accentClass} active-team-option`
+                      : `team-option-card ${team.accentClass}`
+                  }
+                  onClick={() => handleTeamChange(team.id)}
+                  disabled={isSavingTeam}
+                >
+                  <strong>
+                    {team.icon} {team.title}
+                  </strong>
+                  <span>{team.description}</span>
+                </button>
+              ))}
+            </div>
           </section>
 
           <section className="card profile-card">

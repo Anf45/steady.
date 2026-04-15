@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { BrandMark } from "../common/BrandMark";
 import { useAuth } from "../../hooks/useAuth";
+import { getTeamDetails } from "../../services/teamService";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard" },
@@ -11,6 +12,7 @@ export function Navbar({ theme = "light", onToggleTheme }) {
   const { user, userProfile, logOut } = useAuth();
   const displayName = user?.displayName || "there";
   const totalXp = userProfile?.xpTotal || 0;
+  const currentTeam = getTeamDetails(userProfile?.team);
 
   return (
     <header className="navbar">
@@ -22,7 +24,9 @@ export function Navbar({ theme = "light", onToggleTheme }) {
             <h1>Welcome back</h1>
           </div>
         </div>
-        <p>Welcome back, {displayName}.</p>
+        <p>
+          Welcome back, {displayName}. Team {currentTeam.icon} {currentTeam.title}.
+        </p>
       </div>
       <nav className="nav-links" aria-label="Main navigation">
         {navItems.map((item) => (
