@@ -6,6 +6,7 @@ export const BADGES = {
     id: "first-habit",
     title: "First Habit",
     description: "Created the first habit.",
+    unlockHint: "Create your first habit.",
     shape: "circle",
     color: "gold",
   },
@@ -13,6 +14,7 @@ export const BADGES = {
     id: "three-habits",
     title: "3 Habits",
     description: "Created 3 habits.",
+    unlockHint: "Create 3 habits.",
     shape: "square",
     color: "blue",
   },
@@ -20,6 +22,7 @@ export const BADGES = {
     id: "first-check-in",
     title: "First Check-In",
     description: "Completed the first daily check-in.",
+    unlockHint: "Complete your first check-in.",
     shape: "diamond",
     color: "green",
   },
@@ -27,6 +30,7 @@ export const BADGES = {
     id: "five-check-ins",
     title: "5 Check-Ins",
     description: "Completed 5 total check-ins.",
+    unlockHint: "Reach 5 total check-ins.",
     shape: "triangle",
     color: "orange",
   },
@@ -34,6 +38,7 @@ export const BADGES = {
     id: "three-day-streak",
     title: "3-Day Streak",
     description: "Reached a streak of 3 days.",
+    unlockHint: "Reach a streak of 3 days.",
     shape: "hex",
     color: "red",
   },
@@ -41,6 +46,7 @@ export const BADGES = {
     id: "one-hundred-xp",
     title: "100 XP",
     description: "Reached 100 total XP.",
+    unlockHint: "Reach 100 total XP.",
     shape: "pill",
     color: "purple",
   },
@@ -54,6 +60,15 @@ export function getEarnedBadgeDetails(earnedBadgeIds = []) {
   return earnedBadgeIds
     .map((badgeId) => getBadgeDefinitions().find((badge) => badge.id === badgeId))
     .filter(Boolean);
+}
+
+export function getBadgeProgressDetails(earnedBadgeIds = []) {
+  const earnedBadgeSet = new Set(earnedBadgeIds);
+
+  return getBadgeDefinitions().map((badge) => ({
+    ...badge,
+    isEarned: earnedBadgeSet.has(badge.id),
+  }));
 }
 
 export async function awardBadge(userId, badgeId) {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { EmptyState } from "../components/common/EmptyState";
 import { StatusCard } from "../components/common/StatusCard";
-import { getEarnedBadgeDetails, getTotalCheckInCountForUser } from "../services";
+import { getBadgeProgressDetails, getTotalCheckInCountForUser } from "../services";
 import { getHabitsForUser, getUserProfile, resetUserProgress } from "../services";
 import { useAuth } from "../hooks/useAuth";
 
@@ -14,7 +14,7 @@ export function ProfilePage() {
   const [pageMessage, setPageMessage] = useState("");
   const [isResetting, setIsResetting] = useState(false);
   const [totalCheckIns, setTotalCheckIns] = useState(0);
-  const earnedBadges = getEarnedBadgeDetails(profile?.earnedBadges);
+  const badgeProgress = getBadgeProgressDetails(profile?.earnedBadges);
 
   useEffect(() => {
     async function loadProfilePage() {
@@ -140,24 +140,29 @@ export function ProfilePage() {
 
           <section className="card profile-card profile-badges-card">
             <p className="eyebrow">Badges</p>
-            {earnedBadges.length === 0 ? (
-              <p>No badges earned yet.</p>
-            ) : (
-              <div className="badge-list">
-                {earnedBadges.map((badge) => (
-                  <div key={badge.id} className="badge-item">
-                    <div className="badge-item-header">
-                      <span
-                        className={`badge-shape badge-shape-${badge.shape} badge-color-${badge.color}`}
-                        aria-hidden="true"
-                      />
+            <div className="badge-list">
+              {badgeProgress.map((badge) => (
+                <div
+                  key={badge.id}
+                  className={badge.isEarned ? "badge-item" : "badge-item badge-item-locked"}
+                >
+                  <div className="badge-item-header">
+                    <span
+                      className={`badge-shape badge-shape-${badge.shape} badge-color-${badge.color}`}
+                      aria-hidden="true"
+                    />
+                    <div className="badge-copy">
                       <strong>{badge.title}</strong>
+                      <span className="muted-text">
+                        {badge.isEarned ? "Unlocked" : "Locked"}
+                      </span>
                     </div>
-                    <p>{badge.description}</p>
                   </div>
-                ))}
-              </div>
-            )}
+                  <p>{badge.description}</p>
+                  {!badge.isEarned ? <p className="muted-text">Unlock: {badge.unlockHint}</p> : null}
+                </div>
+              ))}
+            </div>
           </section>
         </div>
       ) : (

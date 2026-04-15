@@ -455,6 +455,11 @@ p {
   gap: 0.75rem;
 }
 
+.badge-copy {
+  display: grid;
+  gap: 0.15rem;
+}
+
 .badge-shape {
   display: inline-block;
   width: 1rem;
@@ -521,6 +526,15 @@ p {
   border-bottom-color: #f59e0b;
 }
 
+.badge-item-locked {
+  opacity: 0.68;
+  background: #f8fafc;
+}
+
+.badge-item-locked .badge-shape {
+  filter: grayscale(1);
+}
+
 :root[data-theme="dark"] .navbar,
 :root[data-theme="dark"] .card,
 :root[data-theme="dark"] .page-heading {
@@ -558,6 +572,7 @@ p {
 :root[data-theme="dark"] textarea,
 :root[data-theme="dark"] .xp-chip,
 :root[data-theme="dark"] .dashboard-stat-item,
+:root[data-theme="dark"] .badge-item-locked,
 :root[data-theme="dark"] .badge-item {
   background: #111827;
   color: #e5eefc;
