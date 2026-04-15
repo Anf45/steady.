@@ -14,12 +14,14 @@ import {
   deleteHabit,
   getHabitsForUser,
   getTotalCheckInCountForUser,
+  restoreHabit,
   updateHabit,
 } from "../services";
 
 export function DashboardPage() {
   const { user, userProfile, refreshUserProfile } = useAuth();
   const [habits, setHabits] = useState([]);
+  const [archivedHabits, setArchivedHabits] = useState([]);
   const [loadingHabits, setLoadingHabits] = useState(true);
   const [pageError, setPageError] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -51,11 +53,13 @@ export function DashboardPage() {
       try {
         setPageError("");
         setLoadingHabits(true);
-        const [savedHabits, savedCheckInCount] = await Promise.all([
+        const [savedHabits, savedArchivedHabits, savedCheckInCount] = await Promise.all([
           getHabitsForUser(user.uid),
+          getHabitsForUser(user.uid, { includeArchived: true }),
           getTotalCheckInCountForUser(user.uid),
         ]);
         setHabits(savedHabits);
+        setArchivedHabits(savedArchivedHabits.filter((habit) => habit.archived));
         setTotalCheckIns(savedCheckInCount);
       } catch (error) {
         setPageError(error.message || "Could not load habits.");
@@ -127,8 +131,24 @@ export function DashboardPage() {
       setPageError("");
       await archiveHabit(user.uid, habit.id);
       setHabits((currentHabits) => currentHabits.filter((item) => item.id !== habit.id));
+      setArchivedHabits((currentHabits) => [{ ...habit, archived: true }, ...currentHabits]);
     } catch (error) {
       setPageError(error.message || "Could not archive the habit.");
+    }
+  }
+
+  async function handleRestoreHabit(habit) {
+    if (!user?.uid) {
+      return;
+    }
+
+    try {
+      setPageError("");
+      const restoredHabit = await restoreHabit(user.uid, habit.id);
+      setArchivedHabits((currentHabits) => currentHabits.filter((item) => item.id !== habit.id));
+      setHabits((currentHabits) => [restoredHabit, ...currentHabits]);
+    } catch (error) {
+      setPageError(error.message || "Could not restore the habit.");
     }
   }
 
@@ -149,6 +169,7 @@ export function DashboardPage() {
       setPageError("");
       await deleteHabit(user.uid, habit.id);
       setHabits((currentHabits) => currentHabits.filter((item) => item.id !== habit.id));
+      setArchivedHabits((currentHabits) => currentHabits.filter((item) => item.id !== habit.id));
       setCheckInFeedbackByHabit((currentValues) => {
         const nextValues = { ...currentValues };
         delete nextValues[habit.id];
@@ -244,6 +265,48 @@ export function DashboardPage() {
             <h3>{totalCheckIns}</h3>
           </div>
         </div>
+      </section>
+
+      <section className="stack">
+        <SectionHeader
+          eyebrow="Archived"
+          title="Archived habits"
+          description="Archived habits are hidden from the main list until you restore them."
+        />
+
+        {loadingHabits ? (
+          <StatusCard title="Loading archived habits" message="Archived habits are being loaded." />
+        ) : archivedHabits.length === 0 ? (
+          <p className="muted-text">No archived habits yet.</p>
+        ) : (
+          <div className="stack">
+            {archivedHabits.map((habit) => (
+              <article key={habit.id} className="card archived-habit-card">
+                <div>
+                  <p className="eyebrow">{habit.section || "General"}</p>
+                  <h3>{habit.title}</h3>
+                  <p>{habit.description || "No description added."}</p>
+                </div>
+                <div className="habit-actions">
+                  <button
+                    type="button"
+                    className="secondary-button"
+                    onClick={() => handleRestoreHabit(habit)}
+                  >
+                    Restore
+                  </button>
+                  <button
+                    type="button"
+                    className="secondary-button danger-button"
+                    onClick={() => handleDeleteHabit(habit)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       {isFormOpen ? (

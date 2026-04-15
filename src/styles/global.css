@@ -349,6 +349,12 @@ p {
   padding: 0 0.25rem;
 }
 
+.archived-habit-card {
+  align-items: stretch;
+  flex-direction: column;
+  opacity: 0.92;
+}
+
 .habit-form-card {
   align-items: stretch;
   flex-direction: column;

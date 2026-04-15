@@ -122,6 +122,18 @@ export async function archiveHabit(userId, habitId) {
   });
 }
 
+export async function restoreHabit(userId, habitId) {
+  requireFirebaseSetup();
+
+  const habitReference = doc(firestore, "users", userId, "habits", habitId);
+
+  await updateDoc(habitReference, {
+    archived: false,
+  });
+
+  return getHabitById(userId, habitId);
+}
+
 export async function deleteHabit(userId, habitId) {
   requireFirebaseSetup();
 
