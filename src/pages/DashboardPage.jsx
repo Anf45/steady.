@@ -349,7 +349,7 @@ export function DashboardPage() {
               <AnalyticsLineChart
                 eyebrow="Completion trend"
                 title="7-day completion trend"
-                description="This shows how many different habits you made progress on each day."
+                description="Number of habits completed per day"
                 data={analytics.completionTrend}
                 emptyTitle="No completion trend yet"
                 emptyDescription="Once you start checking in, your daily habit coverage will show up here."
