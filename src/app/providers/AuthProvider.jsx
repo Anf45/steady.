@@ -7,6 +7,7 @@ import {
   subscribeToAuthChanges,
 } from "../../services/firebase/auth";
 import { getFirebaseConfigError, isFirebaseConfigured } from "../../services/firebase/config";
+import { syncRankBadges } from "../../services/levelService";
 import { ensureUserProfile, getUserProfile } from "../../services/userService";
 import { getDefaultTeam } from "../../services/teamService";
 
@@ -26,9 +27,16 @@ export function AuthProvider({ children }) {
     });
 
     const profile = await getUserProfile(nextUser.uid);
-    setUserProfile(profile);
+    const didSyncRankBadges = await syncRankBadges(
+      nextUser.uid,
+      Number(profile.xpTotal || 0),
+      profile.earnedBadges || []
+    );
+    const nextProfile = didSyncRankBadges ? await getUserProfile(nextUser.uid) : profile;
+
+    setUserProfile(nextProfile);
     setAuthError(null);
-    return profile;
+    return nextProfile;
   }
 
   useEffect(() => {

@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { EmptyState } from "../components/common/EmptyState";
 import { StatusCard } from "../components/common/StatusCard";
-import { getBadgeProgressDetails, getTotalCheckInCountForUser } from "../services";
+import {
+  getBadgeProgressDetails,
+  getCurrentRank,
+  getLevelFromXp,
+  getTotalCheckInCountForUser,
+  getXpForNextLevel,
+  getXpProgressInLevel,
+} from "../services";
 import { getHabitsForUser, getUserProfile, resetUserProgress, updateUserTeam } from "../services";
 import { useAuth } from "../hooks/useAuth";
 import { TEAM_OPTIONS, getTeamDetails } from "../services/teamService";
@@ -18,6 +25,11 @@ export function ProfilePage() {
   const [totalCheckIns, setTotalCheckIns] = useState(0);
   const badgeProgress = getBadgeProgressDetails(profile?.earnedBadges);
   const currentTeam = getTeamDetails(profile?.team);
+  const totalXp = Number(profile?.xpTotal || 0);
+  const level = getLevelFromXp(totalXp);
+  const rank = getCurrentRank(totalXp);
+  const nextLevelXp = getXpForNextLevel(totalXp);
+  const xpIntoLevel = getXpProgressInLevel(totalXp);
 
   useEffect(() => {
     async function loadProfilePage() {
@@ -146,6 +158,9 @@ export function ProfilePage() {
             <p className="muted-text">
               Team: {currentTeam.icon} {currentTeam.title}
             </p>
+            <p className="muted-text">
+              Title: {rank.title === "No title yet" ? "No title unlocked yet" : rank.title}
+            </p>
           </section>
 
           <section className="card profile-card">
@@ -178,8 +193,13 @@ export function ProfilePage() {
 
           <section className="card profile-card">
             <p className="eyebrow">Progress</p>
-            <h3>{profile?.xpTotal || 0} XP</h3>
-            <p>Total XP earned so far.</p>
+            <h3>Level {level}</h3>
+            <p>{totalXp} XP earned so far.</p>
+            <p className="muted-text">
+              {rank.title === "No title yet"
+                ? `Earn ${nextLevelXp - totalXp} more XP to unlock Amateur.`
+                : `${rank.title} title unlocked · ${100 - xpIntoLevel} XP to Level ${level + 1}`}
+            </p>
           </section>
 
           <section className="card profile-card">

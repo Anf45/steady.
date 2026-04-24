@@ -50,6 +50,30 @@ export const BADGES = {
     shape: "pill",
     color: "purple",
   },
+  amateurTitle: {
+    id: "amateur-title",
+    title: "Amateur",
+    description: "Unlocked the Amateur title.",
+    unlockHint: "Reach Level 1.",
+    shape: "square",
+    color: "green",
+  },
+  proTitle: {
+    id: "pro-title",
+    title: "Pro",
+    description: "Unlocked the Pro title.",
+    unlockHint: "Reach Level 3.",
+    shape: "hex",
+    color: "blue",
+  },
+  masterTitle: {
+    id: "master-title",
+    title: "Master",
+    description: "Unlocked the Master title.",
+    unlockHint: "Reach Level 5.",
+    shape: "circle",
+    color: "gold",
+  },
 };
 
 export function getBadgeDefinitions() {

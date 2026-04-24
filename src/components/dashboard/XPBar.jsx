@@ -1,8 +1,11 @@
+import { getCurrentRank, getLevelFromXp, getXpForNextLevel, getXpProgressInLevel } from "../../services";
+
 export function XPBar({ value = 0, label = "Total XP" }) {
   const totalXp = Math.max(0, Number(value || 0));
-  const nextMilestone = Math.max(100, Math.ceil(totalXp / 100) * 100);
-  const currentMilestoneStart = Math.max(0, nextMilestone - 100);
-  const progressValue = totalXp - currentMilestoneStart;
+  const level = getLevelFromXp(totalXp);
+  const rank = getCurrentRank(totalXp);
+  const nextMilestone = getXpForNextLevel(totalXp);
+  const progressValue = getXpProgressInLevel(totalXp);
   const progressPercent = Math.min((progressValue / 100) * 100, 100);
 
   return (
@@ -11,10 +14,13 @@ export function XPBar({ value = 0, label = "Total XP" }) {
         <h3>{label}</h3>
         <span>{totalXp}</span>
       </div>
+      <p className="muted-text">
+        Level {level} {rank.title !== "No title yet" ? `· ${rank.title}` : ""}
+      </p>
       <div className="progress-track" aria-hidden="true">
         <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
       </div>
-      <p className="muted-text">Progress to {nextMilestone} XP</p>
+      <p className="muted-text">Progress to Level {level + 1} ({nextMilestone} XP)</p>
     </section>
   );
 }

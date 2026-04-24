@@ -10,6 +10,7 @@ import { getTodayDateString } from "../utils/dates";
 import { getHabitTargetCount, getHabitXpValue } from "../utils/habits";
 import { awardBadge, BADGES } from "./badgeService";
 import { mapHabitDocument } from "./habitsService";
+import { syncRankBadges } from "./levelService";
 import { getNextStreakState } from "./streakService";
 import { firestore, requireFirebaseSetup } from "./firebase/config";
 
@@ -159,6 +160,7 @@ export async function completeHabitCheckIn(userId, habitId, dateString = getToda
 
   if (result.status === "success") {
     await awardBadge(userId, BADGES.firstCheckIn.id);
+    await syncRankBadges(userId, result.userXpTotal);
 
     if (result.userXpTotal >= 100) {
       await awardBadge(userId, BADGES.oneHundredXp.id);
