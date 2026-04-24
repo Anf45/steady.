@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EmptyState } from "../components/common/EmptyState";
 import { SectionHeader } from "../components/common/SectionHeader";
 import { AnalyticsBarChart } from "../components/dashboard/AnalyticsBarChart";
@@ -41,6 +41,7 @@ export function DashboardPage() {
     completionTrend: [],
     sectionProgress: [],
   });
+  const habitFormRef = useRef(null);
   const displayName = user?.displayName || "friend";
   const totalXp = userProfile?.xpTotal || 0;
   const dailyTip = getTipOfTheDay();
@@ -92,6 +93,17 @@ export function DashboardPage() {
   useEffect(() => {
     loadDashboardData();
   }, [user?.uid]);
+
+  useEffect(() => {
+    if (!isFormOpen || !habitFormRef.current) {
+      return;
+    }
+
+    habitFormRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [isFormOpen, selectedHabit?.id]);
 
   function openCreateForm() {
     setSelectedHabit(null);
@@ -391,12 +403,14 @@ export function DashboardPage() {
       </section>
 
       {isFormOpen ? (
-        <HabitForm
-          initialValues={selectedHabit || undefined}
-          onSubmit={handleSaveHabit}
-          onCancel={closeForm}
-          isSubmitting={isSavingHabit}
-        />
+        <div ref={habitFormRef}>
+          <HabitForm
+            initialValues={selectedHabit || undefined}
+            onSubmit={handleSaveHabit}
+            onCancel={closeForm}
+            isSubmitting={isSavingHabit}
+          />
+        </div>
       ) : null}
 
       <section className="stack">
