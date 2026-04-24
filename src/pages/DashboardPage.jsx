@@ -293,6 +293,7 @@ export function DashboardPage() {
               data={analytics.weeklyCheckIns}
               emptyTitle="No check-ins this week"
               emptyDescription="Once you start checking in, your weekly activity chart will appear here."
+              compact
             />
 
             <AnalyticsBarChart
@@ -303,6 +304,7 @@ export function DashboardPage() {
               emptyTitle="No XP earned yet"
               emptyDescription="Check in on a habit to start building your XP trend."
               valueSuffix=" XP"
+              compact
             />
           </>
         )}

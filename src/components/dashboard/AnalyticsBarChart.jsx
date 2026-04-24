@@ -6,12 +6,13 @@ export function AnalyticsBarChart({
   emptyTitle,
   emptyDescription,
   valueSuffix = "",
+  compact = false,
 }) {
   const highestValue = data.reduce((currentHighest, item) => Math.max(currentHighest, item.value), 0);
   const hasValues = highestValue > 0;
 
   return (
-    <section className="card analytics-card">
+    <section className={`card analytics-card${compact ? " analytics-card-compact" : ""}`}>
       <div>
         <p className="eyebrow">{eyebrow}</p>
         <h3>{title}</h3>

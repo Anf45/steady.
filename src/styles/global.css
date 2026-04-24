@@ -368,15 +368,41 @@ p {
   box-shadow: 0 10px 24px var(--team-glow);
 }
 
+.analytics-card-compact {
+  padding: 1rem;
+  gap: 0.75rem;
+}
+
+.analytics-card-compact h3 {
+  font-size: 1.15rem;
+}
+
+.analytics-card-compact > div:first-child {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.analytics-card-compact > div:first-child p:last-child {
+  font-size: 0.95rem;
+}
+
 .analytics-chart {
   display: grid;
   gap: 0.9rem;
   width: 100%;
 }
 
+.analytics-card-compact .analytics-chart {
+  gap: 0.55rem;
+}
+
 .analytics-bar-group {
   display: grid;
   gap: 0.45rem;
+}
+
+.analytics-card-compact .analytics-bar-group {
+  gap: 0.25rem;
 }
 
 .analytics-bar-meta {
@@ -386,12 +412,20 @@ p {
   gap: 1rem;
 }
 
+.analytics-card-compact .analytics-bar-meta {
+  font-size: 0.95rem;
+}
+
 .analytics-bar-track {
   width: 100%;
   min-height: 0.9rem;
   border-radius: 999px;
   overflow: hidden;
   background: color-mix(in srgb, var(--team-accent-soft) 45%, #e2e8f0);
+}
+
+.analytics-card-compact .analytics-bar-track {
+  min-height: 0.6rem;
 }
 
 .analytics-bar-fill {
