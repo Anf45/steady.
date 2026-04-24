@@ -22,13 +22,13 @@ export function Navbar({ theme = "light", onToggleTheme }) {
       <div className="nav-brand">
         <div className="nav-brand-row">
           <BrandMark compact />
-          <div>
+          <div className="nav-brand-copy">
             <p className="eyebrow">Habit tracker</p>
             <h1>Welcome back</h1>
           </div>
         </div>
-        <p>
-          Welcome back, {displayName}. Team {currentTeam.icon} {currentTeam.title}.{" "}
+        <p className="nav-subtitle">
+          Welcome back, {displayName}. Team {currentTeam.title} {currentTeam.icon}.{" "}
           {rank.title !== "No title yet" ? `${rank.title} · ` : ""}Level {level}.
         </p>
       </div>

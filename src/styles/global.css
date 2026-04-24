@@ -133,13 +133,23 @@ textarea {
 
 .nav-brand {
   display: grid;
-  gap: 0.25rem;
+  gap: 0.7rem;
 }
 
 .nav-brand-row {
   display: flex;
   align-items: center;
-  gap: 1.15rem;
+  gap: 1.35rem;
+}
+
+.nav-brand-copy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.nav-subtitle {
+  max-width: 42rem;
+  line-height: 1.5;
 }
 
 .brand-mark {

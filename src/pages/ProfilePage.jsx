@@ -23,7 +23,7 @@ export function ProfilePage() {
   const [isResetting, setIsResetting] = useState(false);
   const [isSavingTeam, setIsSavingTeam] = useState(false);
   const [totalCheckIns, setTotalCheckIns] = useState(0);
-  const badgeProgress = getBadgeProgressDetails(profile?.earnedBadges);
+  const badgeProgress = getBadgeProgressDetails(profile?.earnedBadges).slice().reverse();
   const currentTeam = getTeamDetails(profile?.team);
   const totalXp = Number(profile?.xpTotal || 0);
   const level = getLevelFromXp(totalXp);
