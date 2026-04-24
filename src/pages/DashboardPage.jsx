@@ -46,6 +46,10 @@ export function DashboardPage() {
   const totalXp = userProfile?.xpTotal || 0;
   const dailyTip = getTipOfTheDay();
   const groupedHabits = groupHabitsBySection(habits);
+  const mostConsistentDay = analytics.completionTrend.reduce(
+    (bestDay, currentDay) => (currentDay.value > bestDay.value ? currentDay : bestDay),
+    { label: "No data yet", value: 0 }
+  ).label;
   const currentStreak = habits.reduce(
     (highestStreak, habit) => Math.max(highestStreak, Number(habit.streakCurrent || 0)),
     0
@@ -316,7 +320,7 @@ export function DashboardPage() {
               <AnalyticsBarChart
                 eyebrow="XP trend"
                 title="XP earned this week"
-                description="See which days gave you the biggest XP boost."
+                description={`Most consistent day: ${mostConsistentDay}`}
                 data={analytics.weeklyXp}
                 emptyTitle="No XP earned yet"
                 emptyDescription="XP will start showing up here as you complete habits."
