@@ -2,6 +2,35 @@ export function getHabitTargetCount(habit) {
   return Math.max(1, Number(habit?.frequencyTarget || 1));
 }
 
+export function getHabitDifficulty(habit) {
+  const difficulty = habit?.difficulty;
+
+  if (difficulty === "medium" || difficulty === "hard") {
+    return difficulty;
+  }
+
+  return "easy";
+}
+
+export function getHabitXpValue(habit) {
+  const difficulty = getHabitDifficulty(habit);
+
+  if (difficulty === "hard") {
+    return 30;
+  }
+
+  if (difficulty === "medium") {
+    return 20;
+  }
+
+  return 10;
+}
+
+export function formatHabitDifficulty(habit) {
+  const difficulty = getHabitDifficulty(habit);
+  return `${difficulty.charAt(0).toUpperCase()}${difficulty.slice(1)} (${getHabitXpValue(habit)} XP)`;
+}
+
 export function normalizeHabitSection(sectionName) {
   const trimmedSection = sectionName?.trim();
   return trimmedSection || "General";

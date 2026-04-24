@@ -6,6 +6,7 @@ const defaultValues = {
   section: "",
   frequencyType: "daily",
   frequencyTarget: 1,
+  difficulty: "easy",
 };
 
 export function HabitForm({
@@ -24,6 +25,7 @@ export function HabitForm({
       section: initialValues.section ?? "",
       frequencyType: initialValues.frequencyType ?? "daily",
       frequencyTarget: initialValues.frequencyTarget ?? 1,
+      difficulty: initialValues.difficulty ?? "easy",
     });
     setFormError("");
   }, [initialValues]);
@@ -113,6 +115,15 @@ export function HabitForm({
           />
         </label>
       </div>
+
+      <label className="field">
+        <span>Difficulty</span>
+        <select name="difficulty" value={formValues.difficulty} onChange={handleChange}>
+          <option value="easy">Easy - 10 XP per check-in</option>
+          <option value="medium">Medium - 20 XP per check-in</option>
+          <option value="hard">Hard - 30 XP per check-in</option>
+        </select>
+      </label>
 
       {formError ? <p className="form-error">{formError}</p> : null}
 

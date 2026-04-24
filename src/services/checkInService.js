@@ -3,20 +3,17 @@ import {
   doc,
   getDoc,
   getDocs,
-  limit,
   orderBy,
   query,
   runTransaction,
   serverTimestamp,
 } from "firebase/firestore";
 import { getTodayDateString } from "../utils/dates";
-import { getHabitTargetCount } from "../utils/habits";
+import { getHabitTargetCount, getHabitXpValue } from "../utils/habits";
 import { awardBadge, BADGES } from "./badgeService";
 import { mapHabitDocument } from "./habitsService";
 import { getNextStreakState } from "./streakService";
 import { firestore, requireFirebaseSetup } from "./firebase/config";
-
-const XP_PER_CHECK_IN = 10;
 
 function getHabitReference(userId, habitId) {
   return doc(firestore, "users", userId, "habits", habitId);
@@ -46,10 +43,18 @@ export async function hasTodayCheckIn(userId, habitId, dateString = getTodayDate
 export async function createTodayCheckIn(userId, habitId, dateString = getTodayDateString()) {
   requireFirebaseSetup();
 
+  const habitReference = getHabitReference(userId, habitId);
   const checkInReference = getCheckInReference(userId, habitId, dateString);
 
   await runTransaction(firestore, async (transaction) => {
-    const existingCheckIn = await transaction.get(checkInReference);
+    const [habitSnapshot, existingCheckIn] = await Promise.all([
+      transaction.get(habitReference),
+      transaction.get(checkInReference),
+    ]);
+
+    if (!habitSnapshot.exists()) {
+      throw new Error("Habit not found.");
+    }
 
     if (existingCheckIn.exists()) {
       throw new Error("Today's check-in already exists.");
@@ -57,7 +62,7 @@ export async function createTodayCheckIn(userId, habitId, dateString = getTodayD
 
     transaction.set(checkInReference, {
       completedAt: serverTimestamp(),
-      xpAwarded: XP_PER_CHECK_IN,
+      xpAwarded: getHabitXpValue(habitSnapshot.data()),
       completionCount: 1,
     });
   });
@@ -113,6 +118,7 @@ export async function completeHabitCheckIn(userId, habitId, dateString = getToda
     }
 
     const isFirstCompletionToday = currentCompletionCount === 0;
+    const xpPerCheckIn = getHabitXpValue(habitData);
     const nextStreakState = isFirstCompletionToday
       ? getNextStreakState(habitData, dateString)
       : {
@@ -121,12 +127,12 @@ export async function completeHabitCheckIn(userId, habitId, dateString = getToda
           lastCheckInDate: dateString,
         };
     const currentXpTotal = Number(userSnapshot.data().xpTotal || 0);
-    const nextXpTotal = currentXpTotal + XP_PER_CHECK_IN;
+    const nextXpTotal = currentXpTotal + xpPerCheckIn;
     const nextCompletionCount = currentCompletionCount + 1;
 
     transaction.set(checkInReference, {
       completedAt: serverTimestamp(),
-      xpAwarded: nextCompletionCount * XP_PER_CHECK_IN,
+      xpAwarded: nextCompletionCount * xpPerCheckIn,
       completionCount: nextCompletionCount,
     });
 
@@ -142,7 +148,7 @@ export async function completeHabitCheckIn(userId, habitId, dateString = getToda
 
     return {
       status: "success",
-      xpAwarded: XP_PER_CHECK_IN,
+      xpAwarded: xpPerCheckIn,
       userXpTotal: nextXpTotal,
       updatedHabit: {
         ...mapHabitDocument(habitSnapshot),
@@ -177,14 +183,10 @@ export async function completeHabitCheckIn(userId, habitId, dateString = getToda
 export async function getRecentCheckInsForHabit(userId, habitId, maxItems = 7) {
   requireFirebaseSetup();
 
-  const checkInsQuery = query(
-    getCheckInsCollection(userId, habitId),
-    orderBy("__name__", "desc"),
-    limit(maxItems)
-  );
+  const checkInsQuery = query(getCheckInsCollection(userId, habitId), orderBy("__name__", "desc"));
   const querySnapshot = await getDocs(checkInsQuery);
 
-  return querySnapshot.docs.map((documentSnapshot) => ({
+  return querySnapshot.docs.slice(0, maxItems).map((documentSnapshot) => ({
     id: documentSnapshot.id,
     ...documentSnapshot.data(),
     completedAt: documentSnapshot.data().completedAt?.toDate
@@ -209,29 +211,4 @@ export async function getTotalCheckInCountForUser(userId) {
   );
 
   return checkInCounts.reduce((totalCount, habitCount) => totalCount + habitCount, 0);
-}
-
-export async function getRecentCheckInsForUser(userId, maxItems = 5) {
-  requireFirebaseSetup();
-
-  const habitsSnapshot = await getDocs(collection(firestore, "users", userId, "habits"));
-  const recentCheckInsByHabit = await Promise.all(
-    habitsSnapshot.docs.map(async (habitSnapshot) => {
-      const checkInsSnapshot = await getDocs(
-        query(collection(habitSnapshot.ref, "checkIns"), orderBy("__name__", "desc"), limit(maxItems))
-      );
-
-      return checkInsSnapshot.docs.map((checkInSnapshot) => ({
-        id: checkInSnapshot.id,
-        habitId: habitSnapshot.id,
-        habitTitle: habitSnapshot.data().title || "Habit",
-        completionCount: Number(checkInSnapshot.data().completionCount || 1),
-      }));
-    })
-  );
-
-  return recentCheckInsByHabit
-    .flat()
-    .sort((firstCheckIn, secondCheckIn) => secondCheckIn.id.localeCompare(firstCheckIn.id))
-    .slice(0, maxItems);
 }

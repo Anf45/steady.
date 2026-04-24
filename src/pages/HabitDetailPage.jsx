@@ -5,7 +5,7 @@ import { StatusCard } from "../components/common/StatusCard";
 import { CheckInButton } from "../components/habits/CheckInButton";
 import { useAuth } from "../hooks/useAuth";
 import { completeHabitCheckIn, getHabitById, getRecentCheckInsForHabit } from "../services";
-import { formatHabitFrequency, getHabitProgressSummary } from "../utils/habits";
+import { formatHabitDifficulty, formatHabitFrequency, getHabitProgressSummary } from "../utils/habits";
 
 export function HabitDetailPage() {
   const { habitId } = useParams();
@@ -109,6 +109,9 @@ export function HabitDetailPage() {
             <div className="habit-detail-list">
               <p>
                 <strong>Frequency:</strong> {formatHabitFrequency(habit)}
+              </p>
+              <p>
+                <strong>Difficulty:</strong> {formatHabitDifficulty(habit)}
               </p>
               <p>
                 <strong>Current streak:</strong> {habit.streakCurrent}

@@ -11,7 +11,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { getTodayDateString } from "../utils/dates";
-import { getHabitTargetCount, normalizeHabitSection } from "../utils/habits";
+import { getHabitDifficulty, getHabitTargetCount, normalizeHabitSection } from "../utils/habits";
 import { awardBadge, BADGES } from "./badgeService";
 import { firestore, requireFirebaseSetup } from "./firebase/config";
 
@@ -77,6 +77,7 @@ function buildHabitFields(habitData) {
     section: normalizeHabitSection(habitData.section),
     frequencyType: habitData.frequencyType,
     frequencyTarget: Number(habitData.frequencyTarget),
+    difficulty: getHabitDifficulty(habitData),
   };
 }
 

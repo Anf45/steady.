@@ -1,5 +1,9 @@
 import { Link } from "react-router-dom";
-import { formatHabitFrequency, getHabitProgressSummary } from "../../utils/habits";
+import {
+  formatHabitDifficulty,
+  formatHabitFrequency,
+  getHabitProgressSummary,
+} from "../../utils/habits";
 import { CheckInButton } from "./CheckInButton";
 
 export function HabitCard({
@@ -34,6 +38,8 @@ export function HabitCard({
         <p>Current streak: {habit.streakCurrent}</p>
         <p>Best streak: {habit.streakBest}</p>
       </div>
+
+      <p>Difficulty: {formatHabitDifficulty(habit)}</p>
 
       {habit.description ? <p>{habit.description}</p> : null}
 
