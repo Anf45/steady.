@@ -241,7 +241,7 @@ export function DashboardPage() {
         <XPBar value={totalXp} label="Total XP" />
 
         <section className="card dashboard-note">
-          <p className="eyebrow">Quick note</p>
+          <p className="eyebrow">Tip of the day</p>
           <h3>Start small</h3>
           <p>Create your first habit when you are ready. New habits will appear in the list below.</p>
         </section>
