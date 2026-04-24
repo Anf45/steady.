@@ -271,55 +271,59 @@ export function DashboardPage() {
         </div>
       </section>
 
-      <section className="analytics-grid">
-        {loadingHabits ? (
-          <>
+      <section className="analytics-layout">
+        <div className="analytics-sidebar">
+          {loadingHabits ? (
+            <>
+              <section className="card analytics-card analytics-card-compact">
+                <StatusCard
+                  title="Loading weekly check-ins"
+                  message="Your recent activity chart is being prepared."
+                />
+              </section>
+              <section className="card analytics-card analytics-card-compact">
+                <StatusCard title="Loading XP trend" message="Your XP trend is being prepared." />
+              </section>
+            </>
+          ) : (
+            <>
+              <AnalyticsBarChart
+                eyebrow="Analytics"
+                title="Check-ins this week"
+                description="Your last 7 days of check-ins."
+                data={analytics.weeklyCheckIns}
+                emptyTitle="No check-ins this week"
+                emptyDescription="Start checking in to see your weekly pattern."
+                compact
+              />
+
+              <AnalyticsBarChart
+                eyebrow="XP trend"
+                title="XP earned this week"
+                description="Your XP gains over the last 7 days."
+                data={analytics.weeklyXp}
+                emptyTitle="No XP earned yet"
+                emptyDescription="Check in on a habit to start building your XP trend."
+                valueSuffix=" XP"
+                compact
+              />
+            </>
+          )}
+        </div>
+
+        <div className="analytics-main">
+          {loadingHabits ? (
             <section className="card analytics-card">
               <StatusCard
-                title="Loading weekly check-ins"
-                message="Your recent activity chart is being prepared."
+                title="Loading section progress"
+                message="We are checking which sections are getting the most activity."
               />
             </section>
-            <section className="card analytics-card">
-              <StatusCard title="Loading XP trend" message="Your XP trend is being prepared." />
-            </section>
-          </>
-        ) : (
-          <>
-            <AnalyticsBarChart
-              eyebrow="Analytics"
-              title="Check-ins this week"
-              description="A quick visual look at how active you have been over the last 7 days."
-              data={analytics.weeklyCheckIns}
-              emptyTitle="No check-ins this week"
-              emptyDescription="Once you start checking in, your weekly activity chart will appear here."
-              compact
-            />
-
-            <AnalyticsBarChart
-              eyebrow="XP trend"
-              title="XP earned this week"
-              description="This chart shows how much XP you picked up each day."
-              data={analytics.weeklyXp}
-              emptyTitle="No XP earned yet"
-              emptyDescription="Check in on a habit to start building your XP trend."
-              valueSuffix=" XP"
-              compact
-            />
-          </>
-        )}
+          ) : (
+            <SectionProgressChart sections={analytics.sectionProgress} />
+          )}
+        </div>
       </section>
-
-      {loadingHabits ? (
-        <section className="card analytics-card">
-          <StatusCard
-            title="Loading section progress"
-            message="We are checking which sections are getting the most activity."
-          />
-        </section>
-      ) : (
-        <SectionProgressChart sections={analytics.sectionProgress} />
-      )}
 
       <section className="stack">
         <SectionHeader
