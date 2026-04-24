@@ -15,6 +15,32 @@ export function getTodayDateString() {
   return `${year}-${month}-${day}`;
 }
 
+export function getRecentDateStrings(numberOfDays = 7, endDateString = getTodayDateString()) {
+  const endDate = createDateFromString(endDateString);
+  const recentDates = [];
+
+  for (let index = numberOfDays - 1; index >= 0; index -= 1) {
+    const currentDate = new Date(endDate);
+    currentDate.setDate(endDate.getDate() - index);
+
+    recentDates.push(
+      `${currentDate.getFullYear()}-${padNumber(currentDate.getMonth() + 1)}-${padNumber(
+        currentDate.getDate()
+      )}`
+    );
+  }
+
+  return recentDates;
+}
+
+export function formatDateLabel(dateString, options = { weekday: "short" }) {
+  if (!dateString) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat("en-GB", options).format(createDateFromString(dateString));
+}
+
 export function isSameDay(firstDateString, secondDateString) {
   if (!firstDateString || !secondDateString) {
     return false;

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { EmptyState } from "../components/common/EmptyState";
 import { SectionHeader } from "../components/common/SectionHeader";
+import { AnalyticsBarChart } from "../components/dashboard/AnalyticsBarChart";
+import { SectionProgressChart } from "../components/dashboard/SectionProgressChart";
 import { StatusCard } from "../components/common/StatusCard";
 import { XPBar } from "../components/dashboard/XPBar";
 import { HabitCard } from "../components/habits/HabitCard";
@@ -12,6 +14,7 @@ import {
   completeHabitCheckIn,
   createHabit,
   deleteHabit,
+  getDashboardAnalytics,
   getHabitsForUser,
   getTotalCheckInCountForUser,
   restoreHabit,
@@ -30,6 +33,11 @@ export function DashboardPage() {
   const [checkingInHabitId, setCheckingInHabitId] = useState("");
   const [checkInFeedbackByHabit, setCheckInFeedbackByHabit] = useState({});
   const [totalCheckIns, setTotalCheckIns] = useState(0);
+  const [analytics, setAnalytics] = useState({
+    weeklyCheckIns: [],
+    weeklyXp: [],
+    sectionProgress: [],
+  });
   const displayName = user?.displayName || "friend";
   const totalXp = userProfile?.xpTotal || 0;
   const groupedHabits = groupHabitsBySection(habits);
@@ -42,33 +50,42 @@ export function DashboardPage() {
     0
   );
 
-  useEffect(() => {
-    async function loadHabits() {
-      if (!user?.uid) {
-        setHabits([]);
-        setLoadingHabits(false);
-        return;
-      }
-
-      try {
-        setPageError("");
-        setLoadingHabits(true);
-        const [savedHabits, savedArchivedHabits, savedCheckInCount] = await Promise.all([
-          getHabitsForUser(user.uid),
-          getHabitsForUser(user.uid, { includeArchived: true }),
-          getTotalCheckInCountForUser(user.uid),
-        ]);
-        setHabits(savedHabits);
-        setArchivedHabits(savedArchivedHabits.filter((habit) => habit.archived));
-        setTotalCheckIns(savedCheckInCount);
-      } catch (error) {
-        setPageError(error.message || "Could not load habits.");
-      } finally {
-        setLoadingHabits(false);
-      }
+  async function loadDashboardData() {
+    if (!user?.uid) {
+      setHabits([]);
+      setArchivedHabits([]);
+      setTotalCheckIns(0);
+      setAnalytics({
+        weeklyCheckIns: [],
+        weeklyXp: [],
+        sectionProgress: [],
+      });
+      setLoadingHabits(false);
+      return;
     }
 
-    loadHabits();
+    try {
+      setPageError("");
+      setLoadingHabits(true);
+      const [savedHabits, savedArchivedHabits, savedCheckInCount, savedAnalytics] = await Promise.all([
+        getHabitsForUser(user.uid),
+        getHabitsForUser(user.uid, { includeArchived: true }),
+        getTotalCheckInCountForUser(user.uid),
+        getDashboardAnalytics(user.uid),
+      ]);
+      setHabits(savedHabits);
+      setArchivedHabits(savedArchivedHabits.filter((habit) => habit.archived));
+      setTotalCheckIns(savedCheckInCount);
+      setAnalytics(savedAnalytics);
+    } catch (error) {
+      setPageError(error.message || "Could not load habits.");
+    } finally {
+      setLoadingHabits(false);
+    }
+  }
+
+  useEffect(() => {
+    loadDashboardData();
   }, [user?.uid]);
 
   function openCreateForm() {
@@ -96,15 +113,12 @@ export function DashboardPage() {
       setIsSavingHabit(true);
 
       if (selectedHabit?.id) {
-        const updatedHabit = await updateHabit(user.uid, selectedHabit.id, formValues);
-        setHabits((currentHabits) =>
-          currentHabits.map((habit) => (habit.id === updatedHabit.id ? updatedHabit : habit))
-        );
+        await updateHabit(user.uid, selectedHabit.id, formValues);
       } else {
-        const createdHabit = await createHabit(user.uid, formValues);
-        setHabits((currentHabits) => [createdHabit, ...currentHabits]);
+        await createHabit(user.uid, formValues);
       }
 
+      await loadDashboardData();
       closeForm();
     } catch (error) {
       setPageError(
@@ -130,8 +144,7 @@ export function DashboardPage() {
     try {
       setPageError("");
       await archiveHabit(user.uid, habit.id);
-      setHabits((currentHabits) => currentHabits.filter((item) => item.id !== habit.id));
-      setArchivedHabits((currentHabits) => [{ ...habit, archived: true }, ...currentHabits]);
+      await loadDashboardData();
     } catch (error) {
       setPageError(error.message || "Could not archive the habit.");
     }
@@ -144,9 +157,8 @@ export function DashboardPage() {
 
     try {
       setPageError("");
-      const restoredHabit = await restoreHabit(user.uid, habit.id);
-      setArchivedHabits((currentHabits) => currentHabits.filter((item) => item.id !== habit.id));
-      setHabits((currentHabits) => [restoredHabit, ...currentHabits]);
+      await restoreHabit(user.uid, habit.id);
+      await loadDashboardData();
     } catch (error) {
       setPageError(error.message || "Could not restore the habit.");
     }
@@ -168,13 +180,12 @@ export function DashboardPage() {
     try {
       setPageError("");
       await deleteHabit(user.uid, habit.id);
-      setHabits((currentHabits) => currentHabits.filter((item) => item.id !== habit.id));
-      setArchivedHabits((currentHabits) => currentHabits.filter((item) => item.id !== habit.id));
       setCheckInFeedbackByHabit((currentValues) => {
         const nextValues = { ...currentValues };
         delete nextValues[habit.id];
         return nextValues;
       });
+      await loadDashboardData();
     } catch (error) {
       setPageError(error.message || "Could not delete the habit.");
     }
@@ -190,14 +201,7 @@ export function DashboardPage() {
       setCheckingInHabitId(habit.id);
 
       const result = await completeHabitCheckIn(user.uid, habit.id);
-      const savedCheckInCount = await getTotalCheckInCountForUser(user.uid);
-
-      setHabits((currentHabits) =>
-        currentHabits.map((currentHabit) =>
-          currentHabit.id === habit.id ? result.updatedHabit : currentHabit
-        )
-      );
-      setTotalCheckIns(savedCheckInCount);
+      await loadDashboardData();
 
       setCheckInFeedbackByHabit((currentValues) => ({
         ...currentValues,
@@ -266,6 +270,54 @@ export function DashboardPage() {
           </div>
         </div>
       </section>
+
+      <section className="analytics-grid">
+        {loadingHabits ? (
+          <>
+            <section className="card analytics-card">
+              <StatusCard
+                title="Loading weekly check-ins"
+                message="Your recent activity chart is being prepared."
+              />
+            </section>
+            <section className="card analytics-card">
+              <StatusCard title="Loading XP trend" message="Your XP trend is being prepared." />
+            </section>
+          </>
+        ) : (
+          <>
+            <AnalyticsBarChart
+              eyebrow="Analytics"
+              title="Check-ins this week"
+              description="A quick visual look at how active you have been over the last 7 days."
+              data={analytics.weeklyCheckIns}
+              emptyTitle="No check-ins this week"
+              emptyDescription="Once you start checking in, your weekly activity chart will appear here."
+            />
+
+            <AnalyticsBarChart
+              eyebrow="XP trend"
+              title="XP earned this week"
+              description="This chart shows how much XP you picked up each day."
+              data={analytics.weeklyXp}
+              emptyTitle="No XP earned yet"
+              emptyDescription="Check in on a habit to start building your XP trend."
+              valueSuffix=" XP"
+            />
+          </>
+        )}
+      </section>
+
+      {loadingHabits ? (
+        <section className="card analytics-card">
+          <StatusCard
+            title="Loading section progress"
+            message="We are checking which sections are getting the most activity."
+          />
+        </section>
+      ) : (
+        <SectionProgressChart sections={analytics.sectionProgress} />
+      )}
 
       <section className="stack">
         <SectionHeader

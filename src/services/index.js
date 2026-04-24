@@ -1,3 +1,4 @@
+export * from "./analyticsService";
 export * from "./badgeService";
 export * from "./checkInService";
 export * from "./habitsService";
