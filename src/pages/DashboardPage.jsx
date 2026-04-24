@@ -17,6 +17,7 @@ import {
   deleteHabit,
   getDashboardAnalytics,
   getHabitsForUser,
+  getTipOfTheDay,
   getTotalCheckInCountForUser,
   restoreHabit,
   updateHabit,
@@ -42,6 +43,7 @@ export function DashboardPage() {
   });
   const displayName = user?.displayName || "friend";
   const totalXp = userProfile?.xpTotal || 0;
+  const dailyTip = getTipOfTheDay();
   const groupedHabits = groupHabitsBySection(habits);
   const currentStreak = habits.reduce(
     (highestStreak, habit) => Math.max(highestStreak, Number(habit.streakCurrent || 0)),
@@ -242,8 +244,8 @@ export function DashboardPage() {
 
         <section className="card dashboard-note">
           <p className="eyebrow">Tip of the day</p>
-          <h3>Start small</h3>
-          <p>Create your first habit when you are ready. New habits will appear in the list below.</p>
+          <h3>{dailyTip.title}</h3>
+          <p>{dailyTip.description}</p>
         </section>
       </div>
 
