@@ -9,7 +9,7 @@ export function SectionProgressChart({ sections = [] }) {
       <div>
         <p className="eyebrow">Section progress</p>
         <h3>Where you are most active</h3>
-        <p>A simple view of which habit sections are getting the most check-ins.</p>
+        <p>See which parts of your day are getting the most attention.</p>
       </div>
 
       {highestCheckInCount > 0 ? (
@@ -41,7 +41,7 @@ export function SectionProgressChart({ sections = [] }) {
       ) : (
         <div className="analytics-empty-state">
           <h4>No section activity yet</h4>
-          <p>Once you start checking in, your busiest habit sections will show up here.</p>
+          <p>Your busiest routines will show up here once you start checking in.</p>
         </div>
       )}
     </section>

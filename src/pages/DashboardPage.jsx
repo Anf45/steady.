@@ -243,7 +243,7 @@ export function DashboardPage() {
       <SectionHeader
         eyebrow="Dashboard"
         title={`Welcome, ${displayName}`}
-        description="This is your main dashboard. You will be able to see your habits and progress here."
+        description="This is your home base for habits, streaks, check-ins, and momentum."
         action={
           <button type="button" onClick={openCreateForm}>
             Create Habit
@@ -265,7 +265,7 @@ export function DashboardPage() {
         <SectionHeader
           eyebrow="Stats"
           title="Summary"
-          description="A quick look at your current progress."
+          description="A quick snapshot of how your routine is building up."
         />
 
         <div className="dashboard-stats-grid dashboard-stats-grid-wide">
@@ -307,19 +307,19 @@ export function DashboardPage() {
               <AnalyticsLineChart
                 eyebrow="Analytics"
                 title="Check-ins this week"
-                description="A simple graph of your last 7 days of check-ins."
+                description="See how often you showed up over the last 7 days."
                 data={analytics.weeklyCheckIns}
                 emptyTitle="No check-ins this week"
-                emptyDescription="Start checking in to see your weekly pattern."
+                emptyDescription="Your weekly graph will start filling in after your first check-in."
                 compact
               />
               <AnalyticsBarChart
                 eyebrow="XP trend"
                 title="XP earned this week"
-                description="Your XP gains over the last 7 days."
+                description="See which days gave you the biggest XP boost."
                 data={analytics.weeklyXp}
                 emptyTitle="No XP earned yet"
-                emptyDescription="Check in on a habit to start building your XP trend."
+                emptyDescription="XP will start showing up here as you complete habits."
                 valueSuffix=" XP"
                 compact
               />
@@ -349,10 +349,10 @@ export function DashboardPage() {
               <AnalyticsLineChart
                 eyebrow="Completion trend"
                 title="7-day completion trend"
-                description="Number of habits completed per day"
+                description="Habits completed each day."
                 data={analytics.completionTrend}
                 emptyTitle="No completion trend yet"
-                emptyDescription="Once you start checking in, your daily habit coverage will show up here."
+                emptyDescription="As you complete habits, this will show how full each day was."
                 compact
               />
             </>
@@ -364,7 +364,7 @@ export function DashboardPage() {
         <SectionHeader
           eyebrow="Archived"
           title="Archived habits"
-          description="Archived habits are hidden from the main list until you restore them."
+          description="Habits you have parked for later stay here until you restore them."
         />
 
         {loadingHabits ? (
@@ -417,7 +417,7 @@ export function DashboardPage() {
         <SectionHeader
           eyebrow="Habits"
           title="Your habits"
-          description="This section will list all of the habits connected to your account."
+          description="Everything you are actively working on lives here."
         />
 
         {pageError ? <p className="form-error status-banner">{pageError}</p> : null}
