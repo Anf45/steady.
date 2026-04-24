@@ -346,15 +346,28 @@ p {
 
 .analytics-layout {
   display: grid;
-  grid-template-columns: minmax(280px, 0.75fr) minmax(0, 1.25fr);
+  grid-template-columns: minmax(280px, 0.75fr) minmax(280px, 1.25fr);
+  grid-template-areas:
+    "checkins sections"
+    "xp completion";
   gap: 1rem;
   align-items: start;
 }
 
-.analytics-sidebar,
-.analytics-main {
-  display: grid;
-  gap: 1rem;
+.analytics-slot-checkins {
+  grid-area: checkins;
+}
+
+.analytics-slot-sections {
+  grid-area: sections;
+}
+
+.analytics-slot-xp {
+  grid-area: xp;
+}
+
+.analytics-slot-completion {
+  grid-area: completion;
 }
 
 .dashboard-stat-item {
@@ -987,6 +1000,11 @@ p {
 
   .analytics-layout {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "checkins"
+      "sections"
+      "xp"
+      "completion";
   }
 
   .dashboard-stats-grid {

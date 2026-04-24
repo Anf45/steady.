@@ -275,21 +275,33 @@ export function DashboardPage() {
       </section>
 
       <section className="analytics-layout">
-        <div className="analytics-sidebar">
-          {loadingHabits ? (
-            <>
-              <section className="card analytics-card analytics-card-compact">
-                <StatusCard
-                  title="Loading weekly check-ins"
-                  message="Your recent activity chart is being prepared."
-                />
-              </section>
-              <section className="card analytics-card analytics-card-compact">
-                <StatusCard title="Loading XP trend" message="Your XP trend is being prepared." />
-              </section>
-            </>
-          ) : (
-            <>
+        {loadingHabits ? (
+          <>
+            <section className="card analytics-card analytics-card-compact analytics-slot-checkins">
+              <StatusCard
+                title="Loading weekly check-ins"
+                message="Your recent activity chart is being prepared."
+              />
+            </section>
+            <section className="card analytics-card analytics-slot-sections">
+              <StatusCard
+                title="Loading section progress"
+                message="We are checking which sections are getting the most activity."
+              />
+            </section>
+            <section className="card analytics-card analytics-card-compact analytics-slot-xp">
+              <StatusCard title="Loading XP trend" message="Your XP trend is being prepared." />
+            </section>
+            <section className="card analytics-card analytics-card-compact analytics-slot-completion">
+              <StatusCard
+                title="Loading completion trend"
+                message="Your daily habit coverage is being prepared."
+              />
+            </section>
+          </>
+        ) : (
+          <>
+            <div className="analytics-slot-checkins">
               <AnalyticsLineChart
                 eyebrow="Analytics"
                 title="Check-ins this week"
@@ -299,7 +311,11 @@ export function DashboardPage() {
                 emptyDescription="Start checking in to see your weekly pattern."
                 compact
               />
-
+            </div>
+            <div className="analytics-slot-sections">
+              <SectionProgressChart sections={analytics.sectionProgress} />
+            </div>
+            <div className="analytics-slot-xp">
               <AnalyticsBarChart
                 eyebrow="XP trend"
                 title="XP earned this week"
@@ -310,21 +326,8 @@ export function DashboardPage() {
                 valueSuffix=" XP"
                 compact
               />
-            </>
-          )}
-        </div>
-
-        <div className="analytics-main">
-          {loadingHabits ? (
-            <section className="card analytics-card">
-              <StatusCard
-                title="Loading section progress"
-                message="We are checking which sections are getting the most activity."
-              />
-            </section>
-          ) : (
-            <>
-              <SectionProgressChart sections={analytics.sectionProgress} />
+            </div>
+            <div className="analytics-slot-completion">
               <AnalyticsLineChart
                 eyebrow="Completion trend"
                 title="7-day completion trend"
@@ -334,9 +337,9 @@ export function DashboardPage() {
                 emptyDescription="Once you start checking in, your daily habit coverage will show up here."
                 compact
               />
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
       </section>
 
       <section className="stack">
