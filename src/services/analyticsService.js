@@ -13,6 +13,7 @@ function createEmptyDailyTotals() {
         label: formatDateLabel(dateString),
         checkIns: 0,
         xp: 0,
+        activeHabits: 0,
       },
     ])
   );
@@ -51,6 +52,7 @@ export async function getDashboardAnalytics(userId) {
           const currentDayTotals = totalsByDate.get(checkInSnapshot.id);
           currentDayTotals.checkIns += completionCount;
           currentDayTotals.xp += xpAwarded;
+          currentDayTotals.activeHabits += 1;
         }
       });
 
@@ -76,6 +78,10 @@ export async function getDashboardAnalytics(userId) {
     weeklyXp: dateStrings.map((dateString) => ({
       label: totalsByDate.get(dateString).label,
       value: totalsByDate.get(dateString).xp,
+    })),
+    completionTrend: dateStrings.map((dateString) => ({
+      label: totalsByDate.get(dateString).label,
+      value: totalsByDate.get(dateString).activeHabits,
     })),
     sectionProgress: Array.from(sectionTotals.values())
       .sort((firstSection, secondSection) => secondSection.checkIns - firstSection.checkIns)

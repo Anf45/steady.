@@ -451,6 +451,56 @@ p {
   gap: 0.35rem;
 }
 
+.line-chart-card {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.line-chart {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.line-chart-area {
+  fill: color-mix(in srgb, var(--team-accent-soft) 80%, #ffffff);
+}
+
+.line-chart-path {
+  fill: none;
+  stroke: var(--team-accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.line-chart-point {
+  fill: #ffffff;
+  stroke: var(--team-accent);
+  stroke-width: 3;
+}
+
+.line-chart-labels {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+
+.line-chart-label-item {
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.analytics-card-compact .line-chart-card {
+  gap: 0.45rem;
+}
+
+.analytics-card-compact .line-chart-label-item {
+  font-size: 0.74rem;
+}
+
 .grouped-habits-section {
   gap: 0.75rem;
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { EmptyState } from "../components/common/EmptyState";
 import { SectionHeader } from "../components/common/SectionHeader";
 import { AnalyticsBarChart } from "../components/dashboard/AnalyticsBarChart";
+import { AnalyticsLineChart } from "../components/dashboard/AnalyticsLineChart";
 import { SectionProgressChart } from "../components/dashboard/SectionProgressChart";
 import { StatusCard } from "../components/common/StatusCard";
 import { XPBar } from "../components/dashboard/XPBar";
@@ -36,6 +37,7 @@ export function DashboardPage() {
   const [analytics, setAnalytics] = useState({
     weeklyCheckIns: [],
     weeklyXp: [],
+    completionTrend: [],
     sectionProgress: [],
   });
   const displayName = user?.displayName || "friend";
@@ -58,6 +60,7 @@ export function DashboardPage() {
       setAnalytics({
         weeklyCheckIns: [],
         weeklyXp: [],
+        completionTrend: [],
         sectionProgress: [],
       });
       setLoadingHabits(false);
@@ -287,10 +290,10 @@ export function DashboardPage() {
             </>
           ) : (
             <>
-              <AnalyticsBarChart
+              <AnalyticsLineChart
                 eyebrow="Analytics"
                 title="Check-ins this week"
-                description="Your last 7 days of check-ins."
+                description="A simple graph of your last 7 days of check-ins."
                 data={analytics.weeklyCheckIns}
                 emptyTitle="No check-ins this week"
                 emptyDescription="Start checking in to see your weekly pattern."
@@ -320,7 +323,18 @@ export function DashboardPage() {
               />
             </section>
           ) : (
-            <SectionProgressChart sections={analytics.sectionProgress} />
+            <>
+              <SectionProgressChart sections={analytics.sectionProgress} />
+              <AnalyticsLineChart
+                eyebrow="Completion trend"
+                title="7-day completion trend"
+                description="This shows how many different habits you made progress on each day."
+                data={analytics.completionTrend}
+                emptyTitle="No completion trend yet"
+                emptyDescription="Once you start checking in, your daily habit coverage will show up here."
+                compact
+              />
+            </>
           )}
         </div>
       </section>
