@@ -3,8 +3,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  orderBy,
-  query,
   runTransaction,
   serverTimestamp,
 } from "firebase/firestore";
@@ -183,17 +181,19 @@ export async function completeHabitCheckIn(userId, habitId, dateString = getToda
 export async function getRecentCheckInsForHabit(userId, habitId, maxItems = 7) {
   requireFirebaseSetup();
 
-  const checkInsQuery = query(getCheckInsCollection(userId, habitId), orderBy("__name__", "desc"));
-  const querySnapshot = await getDocs(checkInsQuery);
+  const querySnapshot = await getDocs(getCheckInsCollection(userId, habitId));
 
-  return querySnapshot.docs.slice(0, maxItems).map((documentSnapshot) => ({
-    id: documentSnapshot.id,
-    ...documentSnapshot.data(),
-    completedAt: documentSnapshot.data().completedAt?.toDate
-      ? documentSnapshot.data().completedAt.toDate()
-      : documentSnapshot.data().completedAt,
-    completionCount: Number(documentSnapshot.data().completionCount || 1),
-  }));
+  return querySnapshot.docs
+    .map((documentSnapshot) => ({
+      id: documentSnapshot.id,
+      ...documentSnapshot.data(),
+      completedAt: documentSnapshot.data().completedAt?.toDate
+        ? documentSnapshot.data().completedAt.toDate()
+        : documentSnapshot.data().completedAt,
+      completionCount: Number(documentSnapshot.data().completionCount || 1),
+    }))
+    .sort((firstCheckIn, secondCheckIn) => secondCheckIn.id.localeCompare(firstCheckIn.id))
+    .slice(0, maxItems);
 }
 
 export async function getTotalCheckInCountForUser(userId) {
