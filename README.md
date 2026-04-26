@@ -1,52 +1,43 @@
 # steady.
 
-`steady.` is a habit tracker with a game layer on top. The idea is simple: build routines, check in, grow streaks, earn XP, unlock badges, and make progress feel a bit more fun than a plain checklist.
+`steady.` is a gamified habit tracker built with React and Firebase. The main idea is to make habit building feel a bit more rewarding through streaks, XP, levels, badges, teams, and simple progress visuals.
 
-## What is in the app right now
+## What the app does
 
-- Email/password sign up and log in with Firebase Auth
-- Protected pages for logged-in users
-- Habit creation, editing, archiving, restoring, and deletion
-- Daily check-ins with repeat targets for habits that need more than one completion
-- Streak tracking with current streak and best streak
-- XP rewards tied to habit difficulty:
+- lets users sign up and log in
+- lets users create, edit, archive, restore, and delete habits
+- supports repeat targets for habits that need more than one completion in a day
+- gives XP based on habit difficulty:
   - `easy` = `10 XP`
   - `medium` = `20 XP`
   - `hard` = `30 XP`
-- Levels and rank titles based on XP progress
-- Badge unlocks for milestones like first habit, first check-in, streaks, and XP goals
-- Dashboard summaries and simple analytics for progress over time
-- Habit detail page with recent check-in history
-- Profile page with team, badges, XP, check-ins, and account summary
-- Team themes:
+- tracks streaks, check-ins, levels, and titles
+- shows badges and locked badge goals
+- shows the next unlock so users can see what they are working toward
+- includes team themes:
   - `Earth`
   - `Fire`
   - `Ice`
   - `Air`
-- Dark mode
-- Mobile-friendly card layout
+- shows dashboard analytics and progress cards
 
-## Getting it running
+## Running it locally
 
-### 1. Install the project
+### 1. Install packages
 
 ```bash
 npm install
 ```
 
-### 2. Create your local env file
-
-Copy the example file:
+### 2. Create `.env`
 
 ```bash
 cp .env.example .env
 ```
 
-Then paste your own Firebase values into `.env`.
+Then add your Firebase values.
 
 ### 3. Firebase variables needed
-
-The app reads Firebase config from Vite environment variables, not hardcoded values.
 
 ```bash
 VITE_FIREBASE_API_KEY=
@@ -57,16 +48,16 @@ VITE_FIREBASE_MESSAGING_SENDER_ID=
 VITE_FIREBASE_APP_ID=
 ```
 
-What each one does:
+What they are for:
 
-- `VITE_FIREBASE_API_KEY` = Firebase web app API key
-- `VITE_FIREBASE_AUTH_DOMAIN` = auth domain, usually `your-project.firebaseapp.com`
+- `VITE_FIREBASE_API_KEY` = web app API key
+- `VITE_FIREBASE_AUTH_DOMAIN` = auth domain
 - `VITE_FIREBASE_PROJECT_ID` = Firebase project ID
-- `VITE_FIREBASE_STORAGE_BUCKET` = Firebase storage bucket
-- `VITE_FIREBASE_MESSAGING_SENDER_ID` = Firebase sender ID
-- `VITE_FIREBASE_APP_ID` = Firebase web app ID
+- `VITE_FIREBASE_STORAGE_BUCKET` = storage bucket
+- `VITE_FIREBASE_MESSAGING_SENDER_ID` = sender ID
+- `VITE_FIREBASE_APP_ID` = web app ID
 
-If these are missing, the app fails clearly when Firebase features are used.
+If these are missing, the app shows a clear Firebase setup error when those features are used.
 
 ### 4. Start the app
 
@@ -74,7 +65,7 @@ If these are missing, the app fails clearly when Firebase features are used.
 npm run dev
 ```
 
-Useful extra commands:
+Other useful commands:
 
 ```bash
 npm run build
@@ -83,72 +74,49 @@ npm run preview
 
 ## Using `.env.example`
 
-`.env.example` is only a setup guide. It does not contain any real secrets.
+`.env.example` is just a guide file. It does not contain real secrets.
 
-Normal workflow:
+Normal setup:
 
-1. Copy `.env.example` to `.env`
-2. Add your Firebase project values
-3. Restart the dev server after saving the file
+1. copy `.env.example` to `.env`
+2. paste in your Firebase project values
+3. restart the dev server
 
-## Marker test flow
+## Quick marker test flow
 
-This project is mainly tested manually, so this is the quickest full run-through:
+1. start the app with valid Firebase values
+2. create an account
+3. choose a team
+4. create a habit
+5. check in on it
+6. confirm XP and streak values change
+7. open the habit details page
+8. edit the habit
+9. archive it, then restore it
+10. open the profile page and check badges, level, and summary info
+11. log out and confirm protected pages send you back to auth
 
-1. Start the app with valid Firebase values in `.env`
-2. Create a new account
-3. Pick a team during sign up
-4. Confirm you land on the dashboard
-5. Create a habit
-6. Check in on it
-7. Confirm:
-   - the habit updates for today
-   - XP goes up
-   - the streak changes correctly
-   - the dashboard stats update
-8. Open the habit details page
-9. Confirm recent check-in history appears
-10. Edit the habit and save again
-11. Archive it, then restore it from the archived section
-12. Open the profile page and confirm badges, XP, level, and team info all load correctly
-13. Log out and confirm protected pages send you back to auth
+## What is not in the project yet
 
-## What is still missing
-
-- No automated unit or integration tests yet
-- No password reset flow
-- No calendar-style check-in view
-- No reminders or notifications
-- No social features, friends, or leaderboard system
-- No advanced profile editing beyond the current team and reset options
-- Some Firebase-heavy builds may show a Vite bundle size warning
+- no password reset flow
+- no reminders or notifications
+- no social features or leaderboard
+- no calendar-style habit history
+- no automated test suite yet
 
 ## Project structure
 
 ```text
 src/
-  app/
-    providers/      app-wide providers such as auth context
-    routes/         route setup and protected routes
-  components/
-    common/         shared UI parts
-    dashboard/      dashboard-specific UI
-    habits/         habit cards, forms, and check-in controls
-    layout/         navbar and app shell
-  hooks/            custom hooks such as useAuth
-  pages/            route-level screens
-  services/         Firebase logic and app services
-    firebase/       Firebase config and auth helpers
-  styles/           global CSS
-  utils/            reusable helpers
+  app/            providers and route setup
+  components/     reusable UI pieces
+  hooks/          custom hooks
+  pages/          route-level pages
+  services/       Firebase logic and app logic
+  styles/         global CSS
+  utils/          helper functions
 ```
 
-## Notes for marking
+## Final note
 
-The codebase is split so the main responsibilities stay easy to follow:
-
-- Firebase work stays in the service layer
-- streak logic is separated from UI
-- components mostly focus on rendering and user interaction
-
-That separation made it easier to keep adding features without the whole project turning into one giant page file.
+The code is split so Firebase work stays in services, streak logic stays separate, and the pages mostly focus on UI. That made the project much easier to build, test, and keep organised as more features were added.
