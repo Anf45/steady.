@@ -91,6 +91,8 @@ export async function completeHabitCheckIn(userId, habitId, dateString = getToda
 
     const habitData = habitSnapshot.data();
     const targetCount = getHabitTargetCount(habitData);
+
+    // this is the bit that lets repeat habits stack progress on the same day.
     const currentCompletionCount = checkInSnapshot.exists()
       ? Number(checkInSnapshot.data().completionCount || 1)
       : 0;
@@ -129,6 +131,7 @@ export async function completeHabitCheckIn(userId, habitId, dateString = getToda
     const nextXpTotal = currentXpTotal + xpPerCheckIn;
     const nextCompletionCount = currentCompletionCount + 1;
 
+    // we keep one doc per day and just bump the counter inside it.
     transaction.set(checkInReference, {
       completedAt: serverTimestamp(),
       xpAwarded: nextCompletionCount * xpPerCheckIn,
@@ -159,6 +162,7 @@ export async function completeHabitCheckIn(userId, habitId, dateString = getToda
   });
 
   if (result.status === "success") {
+    // the transaction keeps the data safe. badge checks can happen after that.
     await awardBadge(userId, BADGES.firstCheckIn.id);
     await syncRankBadges(userId, result.userXpTotal);
 
@@ -202,6 +206,7 @@ export async function getTotalCheckInCountForUser(userId) {
   requireFirebaseSetup();
 
   const habitsSnapshot = await getDocs(collection(firestore, "users", userId, "habits"));
+
   const checkInCounts = await Promise.all(
     habitsSnapshot.docs.map(async (habitSnapshot) => {
       const checkInsSnapshot = await getDocs(collection(habitSnapshot.ref, "checkIns"));

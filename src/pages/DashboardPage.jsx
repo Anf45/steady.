@@ -46,6 +46,8 @@ export function DashboardPage() {
   const totalXp = userProfile?.xpTotal || 0;
   const dailyTip = getTipOfTheDay();
   const groupedHabits = groupHabitsBySection(habits);
+
+  // this just means "which day had progress on the most different habits".
   const mostConsistentDay = analytics.completionTrend.reduce(
     (bestDay, currentDay) => (currentDay.value > bestDay.value ? currentDay : bestDay),
     { label: "No data yet", value: 0 }
@@ -75,8 +77,10 @@ export function DashboardPage() {
     }
 
     try {
+      // keeping the full dashboard refresh in one place makes the follow-up actions simpler.
       setPageError("");
       setLoadingHabits(true);
+
       const [savedHabits, savedArchivedHabits, savedCheckInCount, savedAnalytics] = await Promise.all([
         getHabitsForUser(user.uid),
         getHabitsForUser(user.uid, { includeArchived: true }),
@@ -103,6 +107,7 @@ export function DashboardPage() {
       return;
     }
 
+    // editing opens the form further up the page, so bring it back into view.
     habitFormRef.current.scrollIntoView({
       behavior: "smooth",
       block: "start",
@@ -224,6 +229,7 @@ export function DashboardPage() {
       const result = await completeHabitCheckIn(user.uid, habit.id);
       await loadDashboardData();
 
+      // this keeps the little success message matched to what actually happened.
       setCheckInFeedbackByHabit((currentValues) => ({
         ...currentValues,
         [habit.id]:

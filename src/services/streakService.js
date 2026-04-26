@@ -5,8 +5,7 @@ export function getNextStreakState(habit, checkInDate = getTodayDateString()) {
   const bestStreak = Number(habit?.streakBest || 0);
   const lastCheckInDate = habit?.lastCheckInDate || "";
 
-  // Rule 1:
-  // If the user has never checked in before, the first check-in starts the streak at 1.
+  // no last date means this is the streak starting point.
   if (!lastCheckInDate) {
     return {
       streakCurrent: 1,
@@ -15,8 +14,7 @@ export function getNextStreakState(habit, checkInDate = getTodayDateString()) {
     };
   }
 
-  // Rule 2:
-  // If the user already checked in today, we do not change the streak.
+  // same day check-ins should not inflate the streak.
   if (isSameDay(lastCheckInDate, checkInDate)) {
     return {
       streakCurrent: currentStreak,
@@ -25,8 +23,7 @@ export function getNextStreakState(habit, checkInDate = getTodayDateString()) {
     };
   }
 
-  // Rule 3:
-  // If the previous check-in was yesterday, the streak continues and increases by 1.
+  // yesterday means the streak is still alive, so we keep it rolling.
   if (isYesterday(lastCheckInDate, checkInDate)) {
     const nextCurrentStreak = currentStreak + 1;
 
@@ -37,8 +34,7 @@ export function getNextStreakState(habit, checkInDate = getTodayDateString()) {
     };
   }
 
-  // Rule 4:
-  // If at least one day was missed, the streak starts over from 1.
+  // anything older than yesterday counts as a reset.
   return {
     streakCurrent: 1,
     streakBest: Math.max(bestStreak, 1),

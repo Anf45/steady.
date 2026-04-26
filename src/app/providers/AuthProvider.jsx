@@ -20,6 +20,7 @@ export function AuthProvider({ children }) {
   const [authError, setAuthError] = useState(null);
 
   async function loadUserProfile(nextUser) {
+    // older accounts can miss newer fields, so we quietly fill those gaps here first.
     await ensureUserProfile(nextUser.uid, {
       displayName: nextUser.displayName || "User",
       email: nextUser.email || "",
@@ -27,6 +28,8 @@ export function AuthProvider({ children }) {
     });
 
     const profile = await getUserProfile(nextUser.uid);
+
+    // title badges come from xp, so this keeps older profiles in sync on load.
     const didSyncRankBadges = await syncRankBadges(
       nextUser.uid,
       Number(profile.xpTotal || 0),

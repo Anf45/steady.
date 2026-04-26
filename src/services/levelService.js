@@ -24,6 +24,7 @@ export const RANKS = [
 ];
 
 export function getLevelFromXp(xpTotal = 0) {
+  // every 100 xp is a level, so this stays nice and predictable.
   return Math.floor(Math.max(0, Number(xpTotal || 0)) / XP_PER_LEVEL);
 }
 

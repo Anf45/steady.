@@ -52,10 +52,13 @@ export async function getDashboardAnalytics(userId) {
           const currentDayTotals = totalsByDate.get(checkInSnapshot.id);
           currentDayTotals.checkIns += completionCount;
           currentDayTotals.xp += xpAwarded;
+
+          // this one is for the "how many different habits got touched today" view.
           currentDayTotals.activeHabits += 1;
         }
       });
 
+      // section totals mostly exist for the "where are you most active" card.
       const currentSectionTotals = sectionTotals.get(sectionName) || {
         label: sectionName,
         checkIns: 0,

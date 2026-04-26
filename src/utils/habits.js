@@ -58,6 +58,7 @@ export function getHabitProgressSummary(habit) {
   const completedCount = Number(habit?.todayCompletionCount || 0);
   const targetCount = getHabitTargetCount(habit);
 
+  // habit cards use this one little object so the ui does not have to redo the math.
   return {
     completedCount,
     targetCount,
