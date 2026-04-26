@@ -23,21 +23,41 @@
 
 ## Running it locally
 
-### 1. Install packages
+### 1. Clone the project
+
+```bash
+git clone https://github.com/Anf45/steady.
+cd steady.
+```
+
+### 2. Install packages
 
 ```bash
 npm install
 ```
 
-### 2. Create `.env`
+### 3. Create `.env`
 
 ```bash
 cp .env.example .env
 ```
 
-Then add your Firebase values.
+If `cp` does not work on the machine being used, just create a `.env` file manually and copy the variable names from `.env.example`.
 
-### 3. Firebase variables needed
+### 4. Set up Firebase first
+
+The app will not work properly without a Firebase project connected to it.
+
+Create a Firebase project and do these steps in the Firebase console:
+
+1. create a new Firebase project
+2. add a **Web App** inside the project
+3. enable **Authentication**
+4. enable **Email/Password** sign-in
+5. create a **Firestore Database**
+6. copy the web app config values into `.env`
+
+### 5. Firebase variables needed
 
 ```bash
 VITE_FIREBASE_API_KEY=
@@ -59,7 +79,28 @@ What they are for:
 
 If these are missing, the app shows a clear Firebase setup error when those features are used.
 
-### 4. Start the app
+### 6. Firestore rules for testing
+
+For this project to work, signed-in users need permission to read and write their own data.
+
+These rules are enough for local testing:
+
+```txt
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+### 7. Start the app
 
 ```bash
 npm run dev
@@ -81,20 +122,24 @@ Normal setup:
 1. copy `.env.example` to `.env`
 2. paste in your Firebase project values
 3. restart the dev server
+4. make sure Firebase Auth and Firestore are enabled
 
 ## Quick marker test flow
 
-1. start the app with valid Firebase values
-2. create an account
-3. choose a team
-4. create a habit
-5. check in on it
-6. confirm XP and streak values change
-7. open the habit details page
-8. edit the habit
-9. archive it, then restore it
-10. open the profile page and check badges, level, and summary info
-11. log out and confirm protected pages send you back to auth
+1. clone the repo and install packages
+2. add Firebase values to `.env`
+3. enable Email/Password auth and Firestore
+4. start the app
+5. create an account
+6. choose a team
+7. create a habit
+8. check in on it
+9. confirm XP and streak values change
+10. open the habit details page
+11. edit the habit
+12. archive it, then restore it
+13. open the profile page and check badges, level, and summary info
+14. log out and confirm protected pages send you back to auth
 
 ## What is not in the project yet
 
