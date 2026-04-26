@@ -81,7 +81,7 @@ If these are missing, the app shows a clear Firebase setup error when those feat
 
 ### 6. Firestore rules for testing
 
-For this project to work, signed-in users need permission to read and write their own data.
+For this project to work, signed in users need permission to read and write their own data.
 
 These rules are enough for local testing:
 
@@ -124,7 +124,7 @@ Normal setup:
 3. restart the dev server
 4. make sure Firebase Auth and Firestore are enabled
 
-## Quick marker test flow
+## Quick test
 
 1. clone the repo and install packages
 2. add Firebase values to `.env`
@@ -143,11 +143,11 @@ Normal setup:
 
 ## What is not in the project yet
 
-- no password reset flow
+- no password reset 
 - no reminders or notifications
 - no social features or leaderboard
-- no calendar-style habit history
-- no automated test suite yet
+- no calendar style habit history
+- no automated test
 
 ## Project structure
 
