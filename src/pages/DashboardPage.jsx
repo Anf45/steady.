@@ -16,6 +16,7 @@ import {
   createHabit,
   deleteHabit,
   getDashboardAnalytics,
+  getNextUnlockSummary,
   getHabitsForUser,
   getTipOfTheDay,
   getTotalCheckInCountForUser,
@@ -46,6 +47,7 @@ export function DashboardPage() {
   const totalXp = userProfile?.xpTotal || 0;
   const dailyTip = getTipOfTheDay();
   const groupedHabits = groupHabitsBySection(habits);
+  const nextUnlock = getNextUnlockSummary(totalXp, userProfile?.earnedBadges || []);
 
   // this just means "which day had progress on the most different habits".
   const mostConsistentDay = analytics.completionTrend.reduce(
@@ -261,13 +263,45 @@ export function DashboardPage() {
         }
       />
 
-      <div className="dashboard-grid">
+      <div className="dashboard-grid dashboard-grid-three">
         <XPBar value={totalXp} label="Total XP" />
 
         <section className="card dashboard-note">
           <p className="eyebrow">Tip of the day</p>
           <h3>{dailyTip.title}</h3>
           <p>{dailyTip.description}</p>
+        </section>
+
+        <section className="card next-unlock-card">
+          <p className="eyebrow">Next unlock</p>
+          <h3>{nextUnlock.nextLevel.title}</h3>
+          <p>{nextUnlock.nextLevel.description}</p>
+
+          <div className="next-unlock-list">
+            <div className="next-unlock-item">
+              <span className="eyebrow">Next title</span>
+              <strong>
+                {nextUnlock.nextRank
+                  ? `${nextUnlock.nextRank.title} in ${nextUnlock.nextRank.xpToUnlock} XP`
+                  : "All titles unlocked"}
+              </strong>
+              <p className="muted-text">
+                {nextUnlock.nextRank
+                  ? nextUnlock.nextRank.description
+                  : `${nextUnlock.currentRank.title} is your highest title right now.`}
+              </p>
+            </div>
+
+            <div className="next-unlock-item">
+              <span className="eyebrow">Next badge</span>
+              <strong>{nextUnlock.nextBadge ? nextUnlock.nextBadge.title : "All badges unlocked"}</strong>
+              <p className="muted-text">
+                {nextUnlock.nextBadge
+                  ? nextUnlock.nextBadge.description
+                  : "Nothing left to unlock here right now."}
+              </p>
+            </div>
+          </div>
         </section>
       </div>
 
