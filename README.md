@@ -2,6 +2,8 @@
 
 `steady.` is a gamified habit tracker built with React and Firebase. The main idea is to make habit building feel a bit more rewarding through streaks, XP, levels, badges, teams, and simple progress visuals.
 
+https://www.youtube.com/watch?v=XvD9Y5s5Gyc
+
 ## What the app does
 
 - lets users sign up and log in
