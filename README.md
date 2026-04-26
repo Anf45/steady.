@@ -126,6 +126,8 @@ Normal setup:
 
 ## Quick test
 
+There are no shared test credentials included with this project, so the marker should create a new account when testing it.
+
 1. clone the repo and install packages
 2. add Firebase values to `.env`
 3. enable Email/Password auth and Firestore

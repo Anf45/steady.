@@ -1,5 +1,7 @@
 # User Guide
 
+For full setup and run instructions, use `README.md`.
+
 ## What the app does
 
 `steady.` helps a user build simple habits, check in on them each day, keep track of streaks, and earn XP over time.
